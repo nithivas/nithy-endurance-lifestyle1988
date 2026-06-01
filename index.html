@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW5HKSJ0Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-DW5HKSJ0Q6');
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nithyaraj · Triathlete Performance Hub</title>
+  <meta name="description" content="Personal performance dashboard — swimming, running, cycling stats, PRs and improvement plans for Nithyaraj.">
+  <meta property="og:title" content="Nithyaraj · Triathlete Performance Hub">
+  <meta property="og:description" content="Swim · Run · Cycle — PRs, deep stats & improvement plans powered by Garmin data">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏅</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --swim: #1D9E75;
+      --run:  #E24B4A;
+      --cycle:#378ADD;
+      --bg:   #08080C;
+      --surf: #0F0F18;
+      --border: rgba(255,255,255,0.07);
+      --text: #F0EDE8;
+      --muted:#555;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN ── */
+    body::after {
+      content:'';
+      position:fixed; inset:0; pointer-events:none; z-index:999;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+
+    /* ── BACKGROUND MESH ── */
+    .bg-mesh {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(29,158,117,.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 15%, rgba(55,138,221,.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 90%, rgba(201,168,76,.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(226,75,74,.08) 0%, transparent 40%);
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,12,0.7);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: .08em;
+      background: linear-gradient(135deg, var(--text), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: .58rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+    .nav-cta {
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 100px;
+      background: var(--gold);
+      color: #000;
+      text-decoration: none;
+      transition: opacity .15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* ── HERO ── */
+    .hero {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+    }
+    .hero-kicker {
+      font-family: 'Space Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-kicker::before, .hero-kicker::after {
+      content:''; flex:1; max-width:40px; height:1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .hero-kicker::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+    .hero-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      letter-spacing: .04em;
+      line-height: .95;
+      background: linear-gradient(160deg, #fff 30%, #C9A84C 70%, #E8C96A 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: .75rem;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .hero-desc {
+      font-size: .9rem;
+      color: #666;
+      max-width: 460px;
+      line-height: 1.7;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── SPORT PILLS ── */
+    .sport-pills {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .sport-pill {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .7rem;
+      padding: 6px 14px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-family: 'Space Mono', monospace;
+      letter-spacing: .06em;
+    }
+    .sp-swim  { border-color: rgba(29,158,117,.4);  color: var(--swim); }
+    .sp-run   { border-color: rgba(226,75,74,.4);   color: var(--run); }
+    .sp-cycle { border-color: rgba(55,138,221,.4);  color: var(--cycle); }
+    .sp-tri   { border-color: rgba(201,168,76,.4);  color: var(--gold); }
+
+    /* ── CTA BUTTON ── */
+    .cta-wrap { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem; font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 100px;
+      background: linear-gradient(135deg, #C9A84C, #E8C96A);
+      color: #000;
+      text-decoration: none;
+      transition: transform .18s, box-shadow .18s;
+      box-shadow: 0 0 0 rgba(201,168,76,0);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(201,168,76,.35);
+    }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem; font-weight: 500;
+      padding: 14px 32px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: #aaa;
+      text-decoration: none;
+      transition: border-color .18s, color .18s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,.25); color: var(--text); }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 3rem 0 0;
+      background: rgba(255,255,255,.015);
+    }
+    .stat-item {
+      flex: 1;
+      min-width: 140px;
+      max-width: 200px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-lbl {
+      font-family: 'Space Mono', monospace;
+      font-size: .55rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .c-swim  { color: var(--swim); }
+    .c-run   { color: var(--run); }
+    .c-cycle { color: var(--cycle); }
+    .c-gold  { color: var(--gold); }
+    .c-white { color: var(--text); }
+
+    /* ── FEATURE CARDS ── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      padding: 3rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .feat-card {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, border-color .2s;
+    }
+    .feat-card:hover { transform: translateY(-3px); }
+    .feat-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    }
+    .feat-swim::before   { background: linear-gradient(90deg, var(--swim), transparent); border-color: rgba(29,158,117,.2); }
+    .feat-run::before    { background: linear-gradient(90deg, var(--run), transparent); }
+    .feat-cycle::before  { background: linear-gradient(90deg, var(--cycle), transparent); }
+    .feat-prs::before    { background: linear-gradient(90deg, var(--gold), transparent); }
+    .feat-swim  { background: radial-gradient(ellipse at 0% 0%, rgba(29,158,117,.08) 0%, var(--surf) 70%); }
+    .feat-run   { background: radial-gradient(ellipse at 0% 0%, rgba(226,75,74,.08) 0%, var(--surf) 70%); }
+    .feat-cycle { background: radial-gradient(ellipse at 0% 0%, rgba(55,138,221,.08) 0%, var(--surf) 70%); }
+    .feat-prs   { background: radial-gradient(ellipse at 0% 0%, rgba(201,168,76,.07) 0%, var(--surf) 70%); }
+    .feat-icon { font-size: 2rem; margin-bottom: .75rem; display: block; }
+    .feat-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: .04em;
+      margin-bottom: .4rem;
+    }
+    .feat-desc { font-size: .78rem; color: #555; line-height: 1.6; font-weight: 300; }
+    .feat-tag {
+      margin-top: .75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: .58rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      display: inline-block;
+    }
+    .tag-swim  { background: rgba(29,158,117,.12); color: var(--swim); border: 1px solid rgba(29,158,117,.25); }
+    .tag-run   { background: rgba(226,75,74,.12);  color: var(--run);  border: 1px solid rgba(226,75,74,.25); }
+    .tag-cycle { background: rgba(55,138,221,.12); color: var(--cycle);border: 1px solid rgba(55,138,221,.25); }
+    .tag-gold  { background: rgba(201,168,76,.12); color: var(--gold); border: 1px solid rgba(201,168,76,.25); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Space Mono', monospace;
+      font-size: .58rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: #333;
+    }
+    footer span { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-badge { display: none; }
+      .hero { padding: 3rem 1.25rem 2.5rem; }
+      .stats-strip { flex-wrap: wrap; }
+      .stat-item { min-width: 120px; border-right: none; border-bottom: 1px solid var(--border); }
+      .features { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Nithyaraj</div>
+    <div class="nav-badge">Triathlete · 2016–2026</div>
+    <a href="dashboard.html" class="nav-cta">Open Dashboard →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-kicker">Garmin · Triathlon · Performance</div>
+    <div class="hero-name">Nithyaraj</div>
+    <div class="hero-title">Triathlete Performance Hub</div>
+    <p class="hero-desc">
+      9 years of swim, run &amp; cycle data — analysed, visualised, and turned into actionable training insights.
+    </p>
+
+    <div class="sport-pills">
+      <span class="sport-pill sp-swim">🏊 Swimming</span>
+      <span class="sport-pill sp-run">🏃 Running</span>
+      <span class="sport-pill sp-cycle">🚴 Cycling</span>
+      <span class="sport-pill sp-tri">🏅 Triathlon</span>
+    </div>
+
+    <div class="cta-wrap">
+      <a href="dashboard.html" class="btn-primary">🚀 Open Dashboard</a>
+      <a href="dashboard.html#prs" class="btn-secondary">🏆 Hall of PRs</a>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="stat-item">
+        <div class="stat-num c-swim">315<span style="font-size:1rem">km</span></div>
+        <div class="stat-lbl">Total swim</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c-run">3,200<span style="font-size:1rem">+km</span></div>
+        <div class="stat-lbl">Total run</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c-cycle"<div class="stat-num c-cycle">7,970<span style="font-size:1rem">+km</span></div>
+        <div class="stat-lbl">Total cycle</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c-gold">23+</div>
+        <div class="stat-lbl">Personal records</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c-white">1,140+</div>
+        <div class="stat-lbl">Total sessions</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c-gold">9+</div>
+        <div class="stat-lbl">Years active</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE CARDS -->
+  <section class="features">
+    <div class="feat-card feat-swim">
+      <span class="feat-icon">🏊</span>
+      <div class="feat-name">Swimming</div>
+      <div class="feat-desc">Pool &amp; open water sessions, swolf trends, OW vs pool pace gap analysis, and race performance from IM 70.3 Desaru.</div>
+      <span class="feat-tag tag-swim">382 activities · 315 km</span>
+    </div>
+    <div class="feat-card feat-run">
+      <span class="feat-icon">🏃</span>
+      <div class="feat-name">Running</div>
+      <div class="feat-desc">Half marathon PR 1:54:42, cadence &amp; GCT biomechanics, track speed sessions, and full marathon breakdown.</div>
+      <span class="feat-tag tag-run">465+ activities · 9 years</span>
+    </div>
+    <div class="feat-card feat-cycle">
+      <span class="feat-icon">🚴</span>
+      <div class="feat-name">Cycling</div>
+      <div class="feat-desc">Century rides, power data (NP, FTP), L/R balance, speed progression from 18 → 31 km/h, and 200 km distance PR.</div>
+      <span class="feat-tag tag-cycle">255+ activities · 7,800+ km</span>
+    </div>
+    <div class="feat-card feat-prs">
+      <span class="feat-icon">🏆</span>
+      <div class="feat-name">Hall of PRs</div>
+      <div class="feat-desc">Every personal record in one vibrant bento collage — races, milestones, progression timelines &amp; triathlon events.</div>
+      <span class="feat-tag tag-gold">23+ PRs · NUS Biathlon 2026</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Nithyaraj</span> · Triathlete Performance Hub · Powered by Garmin · Updated <span>Jun 1, 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
