@@ -2,9 +2,7 @@
  * bikefit-calc.js
  * Shared Endurance Squad bike fit formula module.
  * Ported 1:1 from the biomechanical cockpit calculator spreadsheet.
- * No dependencies. Include this file once; both the dashboard and any
- * future page (e.g. a standalone landing-page widget) can call
- * computeBikeFit(inputs) and get the exact same numbers.
+ * Supports Node.js, ES6 imports, and direct browser global usage.
  */
 (function (global) {
   'use strict';
@@ -18,76 +16,80 @@
   }
 
   /**
+   * Main calculation engine.
    * @param {Object} inputs
    * @param {number} inputs.inseam            Rider Inseam (cm)
-   * @param {number} inputs.crank             Crank Length (mm) - reference only
+   * @param {number} [inputs.crank=165]       Crank Length (mm) - reference
    * @param {number} inputs.torso             Torso Length (cm)
    * @param {number} inputs.armLength         Arm Length (cm)
    * @param {number} inputs.forearm           Forearm Length (cm)
    * @param {number} inputs.staticAcromion    Static Acromion Width, W_static (cm)
    * @param {number} inputs.elbowFlare        Elbow Flare Width, W_elbow (cm)
-   * @param {'Comfort'|'Medium'|'Aggressive'} inputs.aeroAggressiveness
-   * @param {number} inputs.toeIn             Wrist Extension Toe-In (degrees)
+   * @param {'Comfort'|'Medium'|'Aggressive'} [inputs.aeroAggressiveness='Medium']
+   * @param {number} [inputs.toeIn=12]        Wrist Extension Toe-In (degrees)
    * @param {number} inputs.frameStack        Frame Stack, BB to headtube top (cm)
    * @param {number} inputs.frameReach        Frame Reach, BB to headtube top (cm)
    * @param {number} inputs.stemLength        Stem Length (cm)
    * @param {number} inputs.barReach          Handlebar Bar Reach (cm)
-   * @returns {Object} core, road, tri, recommended metric groups
+   * @returns {Object} Categorized metrics with raw values, units, labels, and notes
    */
   function computeBikeFit(inputs) {
-    var inseam = Number(inputs.inseam) || 0;
-    var torso = Number(inputs.torso) || 0;
-    var armLength = Number(inputs.armLength) || 0;
-    var forearm = Number(inputs.forearm) || 0;
-    var staticAcromion = Number(inputs.staticAcromion) || 0;
-    var elbowFlare = Number(inputs.elbowFlare) || 0;
-    var aeroAggressiveness = inputs.aeroAggressiveness || 'Medium';
-    var toeIn = Number(inputs.toeIn) || 0;
-    var frameStack = Number(inputs.frameStack) || 0;
-    var frameReach = Number(inputs.frameReach) || 0;
-    var stemLength = Number(inputs.stemLength) || 0;
-    var barReach = Number(inputs.barReach) || 0;
+    inputs = inputs || {};
 
-    // ---- CORE ----
-    var saddleHeight = round1(inseam * 0.883);
-    var jointWidth = round1(staticAcromion * 0.905);
-    var scapularDelta = round1(staticAcromion - jointWidth);
-    var elbowShearDelta = elbowFlare - jointWidth;
-    var elbowShearWarning = elbowShearDelta > 3 ? 'HIGH TORQUE \u2013 Narrow Cockpit' : 'OPTIMAL';
+    const inseam = Number(inputs.inseam) || 0;
+    const torso = Number(inputs.torso) || 0;
+    const armLength = Number(inputs.armLength) || 0;
+    const forearm = Number(inputs.forearm) || 0;
+    const staticAcromion = Number(inputs.staticAcromion) || 0;
+    const elbowFlare = Number(inputs.elbowFlare) || 0;
+    const aeroAggressiveness = inputs.aeroAggressiveness || 'Medium';
+    const toeIn = Number(inputs.toeIn) || 12; // Default 12 deg
+    const frameStack = Number(inputs.frameStack) || 0;
+    const frameReach = Number(inputs.frameReach) || 0;
+    const stemLength = Number(inputs.stemLength) || 0;
+    const barReach = Number(inputs.barReach) || 0;
 
-    // ---- ROAD ----
-    var roadHBReach = round1(torso * 0.45 + armLength * 0.35);
-    var roadHBDrop = -6.5; // fixed reference value in source sheet
-    var roadGripReachHoods = round1(roadHBReach + barReach);
-    var bbToHoodGripReach = round1(frameReach + stemLength + barReach);
-    var roadGripDrop = round1(roadHBDrop - 1.0);
+    // ---- CORE BIOMECHANICS ----
+    const saddleHeight = round1(inseam * 0.883);
+    const jointWidth = round1(staticAcromion * 0.905);
+    const scapularDelta = round1(staticAcromion - jointWidth);
+    const elbowShearDelta = round1(elbowFlare - jointWidth);
+    const elbowShearWarning = elbowShearDelta > 3 ? 'HIGH TORQUE – Narrow Cockpit' : 'OPTIMAL';
 
-    // ---- TRI / TT ----
-    var aeroPadReach = round1(forearm * 1.33);
-    var aeroPadDrop = -8.1; // fixed reference value in source sheet
-    var armPadStackBB = round1(saddleHeight + 14.5);
-    var armPadReachBB = round1(frameReach + stemLength - 6.7);
-    var armPadToGripReach = round1(forearm - 1.0);
-    var triTTGripReach = round1(aeroPadReach + armPadToGripReach);
-    var extensionGripAngle = 15; // fixed reference value in source sheet
+    // ---- ROAD COCKPIT ----
+    const roadHBReach = round1(torso * 0.45 + armLength * 0.35);
+    const roadHBDrop = -6.5; // Fixed reference value
+    const roadGripReachHoods = round1(roadHBReach + barReach);
+    const bbToHoodGripReach = round1(frameReach + stemLength + barReach);
+    const roadGripDrop = round1(roadHBDrop - 1.0);
+
+    // ---- TRIATHLON / TT COCKPIT ----
+    const aeroPadReach = round1(forearm * 1.33);
+    const aeroPadDrop = -8.1; // Fixed reference value
+    const armPadStackBB = round1(saddleHeight + 14.5);
+    const armPadReachBB = round1(frameReach + stemLength - 6.7);
+    const armPadToGripReach = round1(forearm - 1.0);
+    const triTTGripReach = round1(aeroPadReach + armPadToGripReach);
+    const extensionGripAngle = 15; // Fixed reference value
 
     // ---- RECOMMENDED OUTPUTS ----
-    var roadBikeHandlebarWidth = jointWidth <= 39.0 ? 38 : 40;
-    var roadBikeDropFlareWidth = roadBikeHandlebarWidth + 2;
+    const roadBikeHandlebarWidth = jointWidth <= 39.0 ? 38 : 40;
+    const roadBikeDropFlareWidth = roadBikeHandlebarWidth + 2;
 
-    var padFactor = aeroAggressiveness === 'Aggressive' ? 0.35
+    const padFactor = aeroAggressiveness === 'Aggressive' ? 0.35
       : aeroAggressiveness === 'Comfort' ? 0.45
-      : 0.40; // Medium (default)
-    var aeroPadCenterWidth = round1(jointWidth * padFactor);
-    var aeroExtensionGripWidth = round1(aeroPadCenterWidth * Math.cos(toRadians(toeIn)));
-    var extensionGripToPadDelta = round1(aeroPadCenterWidth - aeroExtensionGripWidth);
+      : 0.40; // Medium default
+
+    const aeroPadCenterWidth = round1(jointWidth * padFactor);
+    const aeroExtensionGripWidth = round1(aeroPadCenterWidth * Math.cos(toRadians(toeIn)));
+    const extensionGripToPadDelta = round1(aeroPadCenterWidth - aeroExtensionGripWidth);
 
     return {
       core: {
         saddleHeight: { value: saddleHeight, unit: 'cm', label: 'Saddle Height (BB to Saddle Center)', note: 'Distance from bottom bracket center to saddle midpoint' },
         jointWidth: { value: jointWidth, unit: 'cm', label: 'Dynamic Joint Center Width', note: 'Accounts for scapular protraction in riding posture' },
         scapularDelta: { value: scapularDelta, unit: 'cm', label: 'Scapular Protraction Delta', note: 'Reduction in shoulder width when leaning forward' },
-        elbowShearWarning: { value: elbowShearWarning, unit: 'status', label: 'Elbow Shear Warning', note: 'Flags shear stress on inner elbow' }
+        elbowShearWarning: { value: elbowShearWarning, unit: 'status', label: 'Elbow Shear Warning', note: 'Flags shear stress on inner elbow joint' }
       },
       road: {
         roadHBReach: { value: roadHBReach, unit: 'cm', label: 'Road Handlebar Reach', note: 'Saddle tip to handlebar center horizontal distance' },
@@ -115,7 +117,27 @@
     };
   }
 
-  var api = { computeBikeFit: computeBikeFit };
+  /**
+   * Helper to get values formatted in standard mm for PDF exports.
+   */
+  function computeBikeFitMM(inputs) {
+    const raw = computeBikeFit(inputs);
+    const toMM = function(cmVal) { return Math.round(cmVal * 10); };
+
+    return {
+      padStackMm: toMM(raw.tri.armPadStackBB.value),
+      padReachMm: toMM(raw.tri.armPadReachBB.value),
+      saddleHeightMm: toMM(raw.core.saddleHeight.value),
+      wPadMm: toMM(raw.recommended.aeroPadCenterWidth.value),
+      wGripMm: toMM(raw.recommended.aeroExtensionGripWidth.value),
+      raw: raw
+    };
+  }
+
+  const api = {
+    computeBikeFit: computeBikeFit,
+    computeBikeFitMM: computeBikeFitMM
+  };
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = api;
