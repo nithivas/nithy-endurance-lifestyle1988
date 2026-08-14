@@ -84,33 +84,33 @@
 
     return {
       core: {
-        saddleHeight: { value: saddleHeight, unit: 'cm', label: 'Saddle Height (BB to Saddle Center)' },
-        jointWidth: { value: jointWidth, unit: 'cm', label: 'Dynamic Joint Center Width' },
-        scapularDelta: { value: scapularDelta, unit: 'cm', label: 'Scapular Protraction Delta' },
-        elbowShearWarning: { value: elbowShearWarning, unit: 'status', label: 'Elbow Shear Warning' }
+        saddleHeight: { value: saddleHeight, unit: 'cm', label: 'Saddle Height (BB to Saddle Center)', note: 'Distance from bottom bracket center to saddle midpoint' },
+        jointWidth: { value: jointWidth, unit: 'cm', label: 'Dynamic Joint Center Width', note: 'Accounts for scapular protraction in riding posture' },
+        scapularDelta: { value: scapularDelta, unit: 'cm', label: 'Scapular Protraction Delta', note: 'Reduction in shoulder width when leaning forward' },
+        elbowShearWarning: { value: elbowShearWarning, unit: 'status', label: 'Elbow Shear Warning', note: 'Flags shear stress on inner elbow' }
       },
       road: {
-        roadHBReach: { value: roadHBReach, unit: 'cm', label: 'Road Handlebar Reach' },
-        roadHBDrop: { value: roadHBDrop, unit: 'cm', label: 'Road Handlebar Drop' },
-        roadGripReachHoods: { value: roadGripReachHoods, unit: 'cm', label: 'Road Grip Reach (Hoods)' },
-        bbToHoodGripReach: { value: bbToHoodGripReach, unit: 'cm', label: 'BB to Hood Grip Reach' },
-        roadGripDrop: { value: roadGripDrop, unit: 'cm', label: 'Road Grip Drop' }
+        roadHBReach: { value: roadHBReach, unit: 'cm', label: 'Road Handlebar Reach', note: 'Saddle tip to handlebar center horizontal distance' },
+        roadHBDrop: { value: roadHBDrop, unit: 'cm', label: 'Road Handlebar Drop', note: 'Saddle top to handlebar center vertical drop' },
+        roadGripReachHoods: { value: roadGripReachHoods, unit: 'cm', label: 'Road Grip Reach (Hoods)', note: 'Horizontal reach from saddle tip to hood trough' },
+        bbToHoodGripReach: { value: bbToHoodGripReach, unit: 'cm', label: 'BB to Hood Grip Reach', note: 'Horizontal reach from BB center to hood trough' },
+        roadGripDrop: { value: roadGripDrop, unit: 'cm', label: 'Road Grip Drop', note: 'Vertical drop from saddle top to hood trough' }
       },
       tri: {
-        aeroPadReach: { value: aeroPadReach, unit: 'cm', label: 'Aero Pad Reach' },
-        aeroPadDrop: { value: aeroPadDrop, unit: 'cm', label: 'Aero Pad Drop' },
-        armPadStackBB: { value: armPadStackBB, unit: 'cm', label: 'Arm Pad Stack (BB)' },
-        armPadReachBB: { value: armPadReachBB, unit: 'cm', label: 'Arm Pad Reach (BB)' },
-        armPadToGripReach: { value: armPadToGripReach, unit: 'cm', label: 'Arm Pad to Grip Reach' },
-        triTTGripReach: { value: triTTGripReach, unit: 'cm', label: 'Tri TT Grip Reach' },
-        extensionGripAngle: { value: extensionGripAngle, unit: 'deg', label: 'Extension Grip Angle' }
+        aeroPadReach: { value: aeroPadReach, unit: 'cm', label: 'Aero Pad Reach', note: 'Horizontal distance from saddle tip to back edge of pad' },
+        aeroPadDrop: { value: aeroPadDrop, unit: 'cm', label: 'Aero Pad Drop', note: 'Vertical drop from saddle top to top surface of arm pad' },
+        armPadStackBB: { value: armPadStackBB, unit: 'cm', label: 'Arm Pad Stack (BB)', note: 'Vertical distance from BB center to top surface of pad' },
+        armPadReachBB: { value: armPadReachBB, unit: 'cm', label: 'Arm Pad Reach (BB)', note: 'Horizontal distance from BB center to back edge of pad' },
+        armPadToGripReach: { value: armPadToGripReach, unit: 'cm', label: 'Arm Pad to Grip Reach', note: 'Horizontal distance from back of pad to end of extension grip' },
+        triTTGripReach: { value: triTTGripReach, unit: 'cm', label: 'Tri TT Grip Reach', note: 'Total horizontal reach from saddle tip to end of extension grip' },
+        extensionGripAngle: { value: extensionGripAngle, unit: 'deg', label: 'Extension Grip Angle', note: 'High-hands tilt angle relative to horizontal' }
       },
       recommended: {
-        roadBikeHandlebarWidth: { value: roadBikeHandlebarWidth, unit: 'cm', label: 'Road Bike Handlebar Width (Hoods)' },
-        roadBikeDropFlareWidth: { value: roadBikeDropFlareWidth, unit: 'cm', label: 'Road Bike Drop Flare Width' },
-        aeroPadCenterWidth: { value: aeroPadCenterWidth, unit: 'cm', label: 'Aero Pad Center-to-Center Width (W_pad)' },
-        aeroExtensionGripWidth: { value: aeroExtensionGripWidth, unit: 'cm', label: 'Aero Extension Grip Width (W_grip)' },
-        extensionGripToPadDelta: { value: extensionGripToPadDelta, unit: 'cm', label: 'Extension Grip-to-Pad Delta' }
+        roadBikeHandlebarWidth: { value: roadBikeHandlebarWidth, unit: 'cm', label: 'Road Bike Handlebar Width (Hoods)', note: 'Target hood-to-hood width matching protracted shoulders' },
+        roadBikeDropFlareWidth: { value: roadBikeDropFlareWidth, unit: 'cm', label: 'Road Bike Drop Flare Width', note: 'Target width at the lower drop grips' },
+        aeroPadCenterWidth: { value: aeroPadCenterWidth, unit: 'cm', label: 'Aero Pad Center-to-Center Width (W_pad)', note: 'Target pad spacing for neutral joint loading' },
+        aeroExtensionGripWidth: { value: aeroExtensionGripWidth, unit: 'cm', label: 'Aero Extension Grip Width (W_grip)', note: 'Extension grip width creating front aerodynamic wedge' },
+        extensionGripToPadDelta: { value: extensionGripToPadDelta, unit: 'cm', label: 'Extension Grip-to-Pad Delta', note: 'Subtle V-shape toe-in offset delta' }
       }
     };
   }

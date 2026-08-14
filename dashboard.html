@@ -1010,9 +1010,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bf-report-overlay.show{display:block;}
 .bf-report{max-width:760px;margin:0 auto;background:#fff;color:#1a1a1a;border-radius:20px;padding:2.5rem 2.75rem;position:relative;}
 .bf-report-close{position:absolute;top:1.25rem;right:1.25rem;background:#f0f0ed;border:none;border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;color:#555;}
-.bf-report-header{border-bottom:3px solid #185FA5;padding-bottom:1.1rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:1.1rem;}
+.bf-report-header{border-bottom:3px solid #185FA5;padding-bottom:1.1rem;margin-bottom:1.4rem;display:flex;align-items:flex-start;gap:1.1rem;}
 .bf-report-header .bf-r-text{flex:1;}
-.bf-report-logo{width:76px;height:76px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid #185FA5;box-shadow:0 2px 10px rgba(24,95,165,.25);}
+.bf-report-logo{width:82px;height:82px;border-radius:14px;object-fit:cover;flex-shrink:0;border:2px solid #185FA5;}
 .bf-report-header .bf-r-eyebrow{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#185FA5;font-weight:700;}
 .bf-report-header h1{font-size:1.7rem;margin:.25rem 0;letter-spacing:-.01em;}
 .bf-report-header .bf-r-meta{font-size:.82rem;color:#666;}
@@ -3261,7 +3261,7 @@ function openSport_original(sport) {}
           <div id="bfDisciplineResults"></div>
         </div>
         <div class="bf-card">
-          <h3>&#9989; Recommended Cockpit Widths</h3>
+          <h3 id="bfRecommendedTitle">&#9989; Recommended Cockpit Widths</h3>
           <div id="bfRecommendedResults"></div>
         </div>
         <div class="bf-card">
@@ -3305,9 +3305,10 @@ function bfGatherInputs(){
   };
 }
 
-function bfRow(label, val, cls){
+function bfRow(label, val, cls, note){
   cls = cls ? ' ' + cls : '';
-  return '<div class="bf-results-row"><span class="bf-label">' + label + '</span><span class="bf-value' + cls + '">' + val + '</span></div>';
+  var info = note ? '<span class="bf-info" tabindex="0" data-note="' + note.replace(/"/g,'&quot;') + '">&#9432;</span>' : '';
+  return '<div class="bf-results-row"><span class="bf-label">' + label + info + '</span><span class="bf-value' + cls + '">' + val + '</span></div>';
 }
 
 function bfFmt(m){ return (typeof m.value === 'number' ? m.value : m.value) + (m.unit === 'cm' || m.unit === 'deg' ? ' ' + m.unit : ''); }
@@ -3317,44 +3318,63 @@ function toggleBikeFitGuide(){
   document.getElementById('bfLegend').classList.toggle('show');
 }
 
+function bfOpenLightbox(src, alt){
+  var overlay = document.getElementById('bfLightbox');
+  var img = document.getElementById('bfLightboxImg');
+  img.src = src;
+  img.alt = alt || '';
+  overlay.classList.add('show');
+}
+
+function bfCloseLightbox(){
+  document.getElementById('bfLightbox').classList.remove('show');
+}
+
 function renderBikeFit(){
   if (typeof BikeFitCalc === 'undefined') return;
   var inputs = bfGatherInputs();
   var r = BikeFitCalc.computeBikeFit(inputs);
   var bikeType = document.getElementById('bfBikeType').value;
 
-  var coreHtml = bfRow(r.core.saddleHeight.label, bfFmt(r.core.saddleHeight))
-    + bfRow(r.core.jointWidth.label, bfFmt(r.core.jointWidth))
-    + bfRow(r.core.scapularDelta.label, bfFmt(r.core.scapularDelta))
-    + bfRow(r.core.elbowShearWarning.label, r.core.elbowShearWarning.value, r.core.elbowShearWarning.value === 'OPTIMAL' ? 'ok' : 'warn');
+  var coreHtml = bfRow(r.core.saddleHeight.label, bfFmt(r.core.saddleHeight), '', r.core.saddleHeight.note)
+    + bfRow(r.core.jointWidth.label, bfFmt(r.core.jointWidth), '', r.core.jointWidth.note)
+    + bfRow(r.core.scapularDelta.label, bfFmt(r.core.scapularDelta), '', r.core.scapularDelta.note)
+    + bfRow(r.core.elbowShearWarning.label, r.core.elbowShearWarning.value, r.core.elbowShearWarning.value === 'OPTIMAL' ? 'ok' : 'warn', r.core.elbowShearWarning.note);
   document.getElementById('bfCoreResults').innerHTML = coreHtml;
 
   var discTitle, discHtml;
   if (bikeType === 'road'){
     discTitle = '&#128204; Road Metrics';
-    discHtml = bfRow(r.road.roadHBReach.label, bfFmt(r.road.roadHBReach))
-      + bfRow(r.road.roadHBDrop.label, bfFmt(r.road.roadHBDrop))
-      + bfRow(r.road.roadGripReachHoods.label, bfFmt(r.road.roadGripReachHoods))
-      + bfRow(r.road.bbToHoodGripReach.label, bfFmt(r.road.bbToHoodGripReach))
-      + bfRow(r.road.roadGripDrop.label, bfFmt(r.road.roadGripDrop));
+    discHtml = bfRow(r.road.roadHBReach.label, bfFmt(r.road.roadHBReach), '', r.road.roadHBReach.note)
+      + bfRow(r.road.roadHBDrop.label, bfFmt(r.road.roadHBDrop), '', r.road.roadHBDrop.note)
+      + bfRow(r.road.roadGripReachHoods.label, bfFmt(r.road.roadGripReachHoods), '', r.road.roadGripReachHoods.note)
+      + bfRow(r.road.bbToHoodGripReach.label, bfFmt(r.road.bbToHoodGripReach), '', r.road.bbToHoodGripReach.note)
+      + bfRow(r.road.roadGripDrop.label, bfFmt(r.road.roadGripDrop), '', r.road.roadGripDrop.note);
   } else {
     discTitle = '&#128204; Triathlon Metrics';
-    discHtml = bfRow(r.tri.aeroPadReach.label, bfFmt(r.tri.aeroPadReach))
-      + bfRow(r.tri.aeroPadDrop.label, bfFmt(r.tri.aeroPadDrop))
-      + bfRow(r.tri.armPadStackBB.label, bfFmt(r.tri.armPadStackBB))
-      + bfRow(r.tri.armPadReachBB.label, bfFmt(r.tri.armPadReachBB))
-      + bfRow(r.tri.armPadToGripReach.label, bfFmt(r.tri.armPadToGripReach))
-      + bfRow(r.tri.triTTGripReach.label, bfFmt(r.tri.triTTGripReach))
-      + bfRow(r.tri.extensionGripAngle.label, bfFmt(r.tri.extensionGripAngle));
+    discHtml = bfRow(r.tri.aeroPadReach.label, bfFmt(r.tri.aeroPadReach), '', r.tri.aeroPadReach.note)
+      + bfRow(r.tri.aeroPadDrop.label, bfFmt(r.tri.aeroPadDrop), '', r.tri.aeroPadDrop.note)
+      + bfRow(r.tri.armPadStackBB.label, bfFmt(r.tri.armPadStackBB), '', r.tri.armPadStackBB.note)
+      + bfRow(r.tri.armPadReachBB.label, bfFmt(r.tri.armPadReachBB), '', r.tri.armPadReachBB.note)
+      + bfRow(r.tri.armPadToGripReach.label, bfFmt(r.tri.armPadToGripReach), '', r.tri.armPadToGripReach.note)
+      + bfRow(r.tri.triTTGripReach.label, bfFmt(r.tri.triTTGripReach), '', r.tri.triTTGripReach.note)
+      + bfRow(r.tri.extensionGripAngle.label, bfFmt(r.tri.extensionGripAngle), '', r.tri.extensionGripAngle.note);
   }
   document.getElementById('bfDisciplineTitle').innerHTML = discTitle;
   document.getElementById('bfDisciplineResults').innerHTML = discHtml;
 
-  var recHtml = bfRow(r.recommended.roadBikeHandlebarWidth.label, bfFmt(r.recommended.roadBikeHandlebarWidth))
-    + bfRow(r.recommended.roadBikeDropFlareWidth.label, bfFmt(r.recommended.roadBikeDropFlareWidth))
-    + bfRow(r.recommended.aeroPadCenterWidth.label, bfFmt(r.recommended.aeroPadCenterWidth))
-    + bfRow(r.recommended.aeroExtensionGripWidth.label, bfFmt(r.recommended.aeroExtensionGripWidth))
-    + bfRow(r.recommended.extensionGripToPadDelta.label, bfFmt(r.recommended.extensionGripToPadDelta));
+  var recHtml, recTitle;
+  if (bikeType === 'road'){
+    recTitle = '&#9989; Recommended Road Cockpit Widths';
+    recHtml = bfRow(r.recommended.roadBikeHandlebarWidth.label, bfFmt(r.recommended.roadBikeHandlebarWidth), '', r.recommended.roadBikeHandlebarWidth.note)
+      + bfRow(r.recommended.roadBikeDropFlareWidth.label, bfFmt(r.recommended.roadBikeDropFlareWidth), '', r.recommended.roadBikeDropFlareWidth.note);
+  } else {
+    recTitle = '&#9989; Recommended Triathlon Cockpit Widths';
+    recHtml = bfRow(r.recommended.aeroPadCenterWidth.label, bfFmt(r.recommended.aeroPadCenterWidth), '', r.recommended.aeroPadCenterWidth.note)
+      + bfRow(r.recommended.aeroExtensionGripWidth.label, bfFmt(r.recommended.aeroExtensionGripWidth), '', r.recommended.aeroExtensionGripWidth.note)
+      + bfRow(r.recommended.extensionGripToPadDelta.label, bfFmt(r.recommended.extensionGripToPadDelta), '', r.recommended.extensionGripToPadDelta.note);
+  }
+  document.getElementById('bfRecommendedTitle').innerHTML = recTitle;
   document.getElementById('bfRecommendedResults').innerHTML = recHtml;
   document.getElementById('bfSchematic').innerHTML = bfBuildSchematicSVG('dark', bikeType, r);
 }
@@ -3362,87 +3382,144 @@ function renderBikeFit(){
 /* ---- CAD-style side-profile fit schematic ---- */
 function bfBuildSchematicSVG(theme, bikeType, r){
   var isRoad = bikeType === 'road';
-  var saddleHeight = r.core.saddleHeight.value;
-  var reachBB = isRoad ? r.road.bbToHoodGripReach.value : r.tri.armPadReachBB.value;
-  var heightBB = isRoad ? (saddleHeight + r.road.roadGripDrop.value) : r.tri.armPadStackBB.value;
-  var dropVal = isRoad ? r.road.roadGripDrop.value : r.tri.aeroPadDrop.value;
-  var cockpitLabel = isRoad ? 'Hoods' : 'Pads';
-  var widthLabel = isRoad ? 'Handlebar Width' : 'Pad Width (W_pad)';
-  var widthValue = isRoad ? r.recommended.roadBikeHandlebarWidth.value : r.recommended.aeroPadCenterWidth.value;
-  var titleText = (isRoad ? 'ROAD BIKE FIT' : 'TRIATHLON BIKE FIT') + ' \u2014 SCHEMATIC (side profile, to scale)';
+  var saddleHeightMM = Math.round(r.core.saddleHeight.value * 10);
 
-  var c = theme === 'light'
-    ? { bg:'#ffffff', frame:'#185FA5', dim:'#999999', text:'#1a1a1a', sub:'#666666', wheel:'#cccccc', grid:'rgba(0,0,0,.05)', point:'#185FA5' }
-    : { bg:'transparent', frame:'#3DA9FC', dim:'#8A93A6', text:'#EDEFF3', sub:'#8A93A6', wheel:'#3A4557', grid:'rgba(255,255,255,.05)', point:'#3DA9FC' };
-
-  var scale = 4.2;
-  var originX = 210, originY = 300;
-  var setback = 6 * scale;
-  var saddleX = originX - setback, saddleY = originY - saddleHeight * scale;
-  var cockpitX = originX + reachBB * scale, cockpitY = originY - heightBB * scale;
-  var rearX = originX - 118, wheelY = originY + 15, wr = 52;
-  var frontX = cockpitX + 34;
-  var groundY = wheelY + wr;
-  var vw = Math.max(680, frontX + 140);
-  var vh = 430;
-
-  function tick(x1,y1,x2,y2){ // small perpendicular end-tick for a dimension line
-    var dx = x2-x1, dy = y2-y1, len = Math.sqrt(dx*dx+dy*dy) || 1;
-    var ux = -dy/len*5, uy = dx/len*5;
-    return '<line x1="'+(x1-ux)+'" y1="'+(y1-uy)+'" x2="'+(x1+ux)+'" y2="'+(y1+uy)+'" stroke="'+c.dim+'" stroke-width="1.3"/>';
+  if (isRoad){
+    var stackMM = Math.round((r.core.saddleHeight.value + r.road.roadGripDrop.value) * 10);
+    var reachMM = Math.round(r.road.bbToHoodGripReach.value * 10);
+    return ''
+      + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="100%" height="100%" style="background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">'
+      + '  <defs>'
+      + '    <marker id="arrow-black" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '      <path d="M 0 2 L 10 5 L 0 8 z" fill="#1e293b"/>'
+      + '    </marker>'
+      + '    <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '      <path d="M 0 2 L 10 5 L 0 8 z" fill="#2563eb"/>'
+      + '    </marker>'
+      + '  </defs>'
+      + '  <line x1="100" y1="520" x2="800" y2="520" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6 4" />'
+      + '  <line x1="450" y1="100" x2="450" y2="580" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6 4" />'
+      + '  <circle cx="450" cy="520" r="12" fill="none" stroke="#ef4444" stroke-width="1.5"/>'
+      + '  <circle cx="450" cy="520" r="3" fill="#ef4444"/>'
+      + '  <g stroke="#1e293b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">'
+      + '    <line x1="200" y1="520" x2="450" y2="520" />'
+      + '    <line x1="200" y1="520" x2="360" y2="280" />'
+      + '    <line x1="450" y1="520" x2="360" y2="280" />'
+      + '    <line x1="360" y1="280" x2="320" y2="170" stroke-width="4" />'
+      + '    <path d="M 280 165 C 310 165, 350 160, 360 170 C 340 180, 290 180, 280 165 Z" fill="#1e293b" />'
+      + '    <line x1="450" y1="520" x2="620" y2="260" />'
+      + '    <line x1="360" y1="280" x2="600" y2="280" />'
+      + '    <line x1="600" y1="280" x2="620" y2="260" stroke-width="5" />'
+      + '    <line x1="620" y1="260" x2="680" y2="520" />'
+      + '    <line x1="605" y1="272" x2="665" y2="255" stroke-width="4" />'
+      + '    <path d="M 665 255 L 685 255 C 700 255, 710 270, 700 295 C 690 315, 665 315, 660 315" stroke-width="3" />'
+      + '    <line x1="450" y1="520" x2="490" y2="560" stroke-width="4" />'
+      + '    <line x1="480" y1="560" x2="500" y2="560" stroke-width="3" stroke="#2563eb" />'
+      + '  </g>'
+      + '  <circle cx="200" cy="520" r="8" fill="#94a3b8" />'
+      + '  <circle cx="680" cy="520" r="8" fill="#94a3b8" />'
+      + '  <line x1="610" y1="520" x2="610" y2="270" stroke="#2563eb" stroke-width="1.5" marker-start="url(#arrow-blue)" marker-end="url(#arrow-blue)" />'
+      + '  <line x1="605" y1="270" x2="615" y2="270" stroke="#2563eb" stroke-width="1.5" />'
+      + '  <g transform="translate(615, 400)">'
+      + '    <rect x="5" y="-12" width="95" height="24" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>'
+      + '    <text x="10" y="4" font-size="12" font-weight="bold" fill="#1e40af">STACK: ' + stackMM + ' mm</text>'
+      + '  </g>'
+      + '  <line x1="450" y1="300" x2="610" y2="300" stroke="#2563eb" stroke-width="1.5" marker-start="url(#arrow-blue)" marker-end="url(#arrow-blue)" />'
+      + '  <g transform="translate(490, 290)">'
+      + '    <rect x="-5" y="-15" width="95" height="24" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>'
+      + '    <text x="0" y="2" font-size="12" font-weight="bold" fill="#1e40af">REACH: ' + reachMM + ' mm</text>'
+      + '  </g>'
+      + '  <line x1="450" y1="520" x2="310" y2="165" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="3 3" />'
+      + '  <line x1="435" y1="520" x2="295" y2="165" stroke="#1e293b" stroke-width="1.5" marker-start="url(#arrow-black)" marker-end="url(#arrow-black)" />'
+      + '  <g transform="translate(300, 340) rotate(68)">'
+      + '    <rect x="-10" y="-14" width="145" height="24" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
+      + '    <text x="-5" y="2" font-size="12" font-weight="bold" fill="#0f172a">SADDLE HT: ' + saddleHeightMM + ' mm</text>'
+      + '  </g>'
+      + '  <path d="M 510 520 A 60 60 0 0 0 493 472" fill="none" stroke="#1e293b" stroke-width="1.5" marker-end="url(#arrow-black)" />'
+      + '  <g transform="translate(515, 495)">'
+      + '    <rect x="0" y="-12" width="75" height="22" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
+      + '    <text x="5" y="3" font-size="11" font-weight="bold" fill="#0f172a">STA: 73.5&#176;</text>'
+      + '  </g>'
+      + '  <line x1="680" y1="520" x2="580" y2="520" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2 2" />'
+      + '  <line x1="620" y1="260" x2="710" y2="520" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2 2" />'
+      + '  <path d="M 680 520 A 50 50 0 0 0 666 480" fill="none" stroke="#1e293b" stroke-width="1.5" marker-end="url(#arrow-black)" />'
+      + '  <g transform="translate(685, 500)">'
+      + '    <rect x="0" y="-12" width="75" height="22" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
+      + '    <text x="5" y="3" font-size="11" font-weight="bold" fill="#0f172a">HTA: 72.5&#176;</text>'
+      + '  </g>'
+      + '</svg>';
+  } else {
+    var padStackMM = Math.round(r.tri.armPadStackBB.value * 10);
+    var padReachMM = Math.round(r.tri.armPadReachBB.value * 10);
+    var aeroReachMM = Math.round((r.tri.armPadReachBB.value + r.tri.armPadToGripReach.value) * 10);
+    return ''
+      + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="100%" height="100%" style="background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">'
+      + '  <defs>'
+      + '    <marker id="arrow-black-tt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '      <path d="M 0 2 L 10 5 L 0 8 z" fill="#1e293b"/>'
+      + '    </marker>'
+      + '    <marker id="arrow-blue-tt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '      <path d="M 0 2 L 10 5 L 0 8 z" fill="#2563eb"/>'
+      + '    </marker>'
+      + '  </defs>'
+      + '  <line x1="100" y1="520" x2="800" y2="520" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6 4" />'
+      + '  <line x1="450" y1="100" x2="450" y2="580" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6 4" />'
+      + '  <circle cx="450" cy="520" r="12" fill="none" stroke="#ef4444" stroke-width="1.5"/>'
+      + '  <circle cx="450" cy="520" r="3" fill="#ef4444"/>'
+      + '  <path d="M 435 520 L 410 260 L 440 260 L 465 520 Z" fill="#f8fafc" stroke="none" />'
+      + '  <path d="M 450 520 L 610 270 L 630 270 L 470 520 Z" fill="#f8fafc" stroke="none" />'
+      + '  <g stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none">'
+      + '    <line x1="200" y1="520" x2="450" y2="520" />'
+      + '    <line x1="200" y1="520" x2="390" y2="330" />'
+      + '    <line x1="450" y1="520" x2="395" y2="250" />'
+      + '    <line x1="395" y1="250" x2="370" y2="140" stroke-width="6" />'
+      + '    <path d="M 330 135 L 400 135 C 400 135, 395 150, 375 150 C 355 150, 330 145, 330 135 Z" fill="#1e293b" />'
+      + '    <line x1="450" y1="520" x2="615" y2="270" stroke-width="6" />'
+      + '    <line x1="395" y1="250" x2="600" y2="250" />'
+      + '    <line x1="600" y1="250" x2="615" y2="270" stroke-width="8" />'
+      + '    <line x1="615" y1="270" x2="680" y2="520" stroke-width="4" />'
+      + '    <path d="M 600 250 L 635 240 L 635 250 Z" fill="#1e293b" />'
+      + '    <line x1="635" y1="250" x2="670" y2="250" stroke-width="4" />'
+      + '    <path d="M 670 250 L 685 240" stroke-width="4" />'
+      + '    <line x1="645" y1="250" x2="645" y2="215" stroke-width="5" stroke="#2563eb" />'
+      + '    <line x1="625" y1="213" x2="665" y2="213" stroke-width="5" stroke="#1e293b" />'
+      + '    <path d="M 635 218 L 720 218 Q 740 218 750 185" stroke-width="3.5" stroke="#2563eb" />'
+      + '    <circle cx="450" cy="520" r="22" fill="#1e293b" />'
+      + '    <line x1="450" y1="520" x2="490" y2="555" stroke-width="5" />'
+      + '    <line x1="480" y1="555" x2="500" y2="555" stroke-width="3" stroke="#2563eb" />'
+      + '  </g>'
+      + '  <circle cx="200" cy="520" r="8" fill="#94a3b8" />'
+      + '  <circle cx="680" cy="520" r="8" fill="#94a3b8" />'
+      + '  <line x1="608" y1="520" x2="608" y2="250" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 3" />'
+      + '  <line x1="645" y1="520" x2="645" y2="213" stroke="#2563eb" stroke-width="1.5" marker-start="url(#arrow-blue-tt)" marker-end="url(#arrow-blue-tt)" />'
+      + '  <g transform="translate(650, 360)">'
+      + '    <rect x="5" y="-12" width="130" height="24" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>'
+      + '    <text x="10" y="4" font-size="11" font-weight="bold" fill="#1e40af">PAD STACK: ' + padStackMM + ' mm</text>'
+      + '  </g>'
+      + '  <line x1="450" y1="190" x2="645" y2="190" stroke="#2563eb" stroke-width="1.5" marker-start="url(#arrow-blue-tt)" marker-end="url(#arrow-blue-tt)" />'
+      + '  <line x1="645" y1="185" x2="645" y2="210" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 2" />'
+      + '  <g transform="translate(500, 180)">'
+      + '    <rect x="-5" y="-15" width="130" height="24" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>'
+      + '    <text x="0" y="2" font-size="11" font-weight="bold" fill="#1e40af">PAD REACH: ' + padReachMM + ' mm</text>'
+      + '  </g>'
+      + '  <line x1="450" y1="155" x2="750" y2="155" stroke="#2563eb" stroke-width="1.5" marker-start="url(#arrow-blue-tt)" marker-end="url(#arrow-blue-tt)" />'
+      + '  <line x1="750" y1="150" x2="750" y2="180" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 2" />'
+      + '  <g transform="translate(560, 145)">'
+      + '    <rect x="-5" y="-14" width="145" height="22" rx="4" fill="#2563eb" />'
+      + '    <text x="0" y="2" font-size="11" font-weight="bold" fill="#ffffff">AERO REACH: ' + aeroReachMM + ' mm</text>'
+      + '  </g>'
+      + '  <path d="M 500 520 A 50 50 0 0 0 488 472" fill="none" stroke="#1e293b" stroke-width="1.5" marker-end="url(#arrow-black-tt)" />'
+      + '  <g transform="translate(505, 490)">'
+      + '    <rect x="0" y="-12" width="90" height="22" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
+      + '    <text x="5" y="3" font-size="11" font-weight="bold" fill="#0f172a">TRI STA: 78.0&#176;</text>'
+      + '  </g>'
+      + '  <line x1="450" y1="520" x2="365" y2="135" stroke="#1e293b" stroke-width="1.5" marker-start="url(#arrow-black-tt)" marker-end="url(#arrow-black-tt)" />'
+      + '  <g transform="translate(370, 320) rotate(77)">'
+      + '    <rect x="-10" y="-14" width="145" height="24" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
+      + '    <text x="-5" y="2" font-size="12" font-weight="bold" fill="#0f172a">SADDLE HT: ' + saddleHeightMM + ' mm</text>'
+      + '  </g>'
+      + '</svg>';
   }
-  function dimV(x, y1, y2, label){
-    return '<g>'
-      + '<line x1="'+x+'" y1="'+y1+'" x2="'+x+'" y2="'+y2+'" stroke="'+c.dim+'" stroke-width="1.1" stroke-dasharray="4,3"/>'
-      + tick(x,y1,x,y2) + tick(x,y2,x,y1)
-      + '<text x="'+(x-8)+'" y="'+((y1+y2)/2)+'" fill="'+c.text+'" font-size="11" font-family="SF Mono,Consolas,monospace" text-anchor="end" transform="rotate(-90 '+(x-8)+' '+((y1+y2)/2)+')">'+label+'</text>'
-      + '</g>';
-  }
-  function dimH(y, x1, x2, label){
-    return '<g>'
-      + '<line x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'" stroke="'+c.dim+'" stroke-width="1.1" stroke-dasharray="4,3"/>'
-      + tick(x1,y,x2,y) + tick(x2,y,x1,y)
-      + '<text x="'+((x1+x2)/2)+'" y="'+(y+16)+'" fill="'+c.text+'" font-size="11" font-family="SF Mono,Consolas,monospace" text-anchor="middle">'+label+'</text>'
-      + '</g>';
-  }
-
-  var gridPattern = '<defs><pattern id="bfGrid" width="24" height="24" patternUnits="userSpaceOnUse">'
-    + '<path d="M24 0H0V24" fill="none" stroke="'+c.grid+'" stroke-width="1"/></pattern></defs>';
-
-  var svg = ''
-    + '<svg viewBox="0 0 '+vw+' '+vh+'" xmlns="http://www.w3.org/2000/svg" style="background:'+c.bg+'">'
-    + gridPattern
-    + '<rect x="0" y="0" width="'+vw+'" height="'+vh+'" fill="url(#bfGrid)"/>'
-    + '<text x="20" y="26" fill="'+c.text+'" font-size="12" font-weight="700" font-family="SF Mono,Consolas,monospace" letter-spacing="1">'+titleText+'</text>'
-    // ground line
-    + '<line x1="0" y1="'+groundY+'" x2="'+vw+'" y2="'+groundY+'" stroke="'+c.grid+'" stroke-width="1.5"/>'
-    // wheels
-    + '<circle cx="'+rearX+'" cy="'+wheelY+'" r="'+wr+'" fill="none" stroke="'+c.wheel+'" stroke-width="2.5"/>'
-    + '<circle cx="'+frontX+'" cy="'+wheelY+'" r="'+wr+'" fill="none" stroke="'+c.wheel+'" stroke-width="2.5"/>'
-    // frame lines: chainstay, seat tube, top line to cockpit, fork
-    + '<line x1="'+rearX+'" y1="'+wheelY+'" x2="'+originX+'" y2="'+originY+'" stroke="'+c.frame+'" stroke-width="3"/>'
-    + '<line x1="'+originX+'" y1="'+originY+'" x2="'+saddleX+'" y2="'+saddleY+'" stroke="'+c.frame+'" stroke-width="3"/>'
-    + '<line x1="'+originX+'" y1="'+originY+'" x2="'+cockpitX+'" y2="'+cockpitY+'" stroke="'+c.frame+'" stroke-width="3"/>'
-    + '<line x1="'+cockpitX+'" y1="'+cockpitY+'" x2="'+frontX+'" y2="'+wheelY+'" stroke="'+c.frame+'" stroke-width="3"/>'
-    // saddle
-    + '<ellipse cx="'+saddleX+'" cy="'+saddleY+'" rx="16" ry="5" fill="'+c.point+'"/>'
-    // cockpit marker
-    + '<circle cx="'+cockpitX+'" cy="'+cockpitY+'" r="5" fill="'+c.point+'"/>'
-    + '<text x="'+cockpitX+'" y="'+(cockpitY-12)+'" fill="'+c.text+'" font-size="11" font-family="SF Mono,Consolas,monospace" text-anchor="middle">'+cockpitLabel+'</text>'
-    // BB marker
-    + '<circle cx="'+originX+'" cy="'+originY+'" r="5" fill="'+c.point+'"/>'
-    + '<text x="'+originX+'" y="'+(originY+20)+'" fill="'+c.sub+'" font-size="10" font-family="SF Mono,Consolas,monospace" text-anchor="middle">BB</text>'
-    // dimension: saddle height (vertical, left of frame)
-    + dimV(originX-155, originY, saddleY, 'Saddle Height ' + saddleHeight.toFixed(1) + ' cm')
-    // dimension: reach (horizontal, below ground)
-    + dimH(groundY+55, originX, cockpitX, 'Reach (BB\u2192'+cockpitLabel+') ' + reachBB.toFixed(1) + ' cm')
-    // dimension: drop (vertical, right of cockpit)
-    + dimV(cockpitX+50, saddleY, cockpitY, 'Drop (Saddle\u2192'+cockpitLabel+') ' + dropVal.toFixed(1) + ' cm')
-    // cockpit width callout (frontal dimension, text only)
-    + '<text x="'+cockpitX+'" y="'+(cockpitY-30)+'" fill="'+c.sub+'" font-size="10" font-family="SF Mono,Consolas,monospace" text-anchor="middle">'+widthLabel+': '+widthValue+' cm</text>'
-    + '</svg>';
-
-  return svg;
 }
 
 function bfReportTable(caption, metrics){
