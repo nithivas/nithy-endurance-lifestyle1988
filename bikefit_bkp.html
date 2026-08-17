@@ -964,190 +964,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .sport-card.triclub{border:2px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#C9A84C,#1D9E75,#378ADD) border-box;}.sport-card.triclub:hover{transform:translateY(-5px);box-shadow:0 12px 40px rgba(201,168,76,.2);}.pill-triclub{background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(29,158,117,.12));color:#8A6F00;border:1px solid rgba(201,168,76,.35);font-weight:600;}
 .sport-card.bikefit:hover{border-color:#185FA5;}.pill-bikefit{background:#E6F1FB;color:#185FA5;}
-#detail-bikefit{
-  background:linear-gradient(135deg,#0A0E14 0%,#1a1628 50%,#0d2c5f 100%);
-  background-attachment:fixed;
-  color:#EDEFF3;
-  min-height:100vh;
-  position:relative;
-  overflow:hidden;
-}
-#detail-bikefit::before{
-  content:'';
-  position:fixed;
-  top:-100px;
-  right:-150px;
-  width:800px;
-  height:800px;
-  opacity:.12;
-  background:radial-gradient(ellipse at center,#00D4FF 0%,#00A8FF 40%,transparent 70%);
-  pointer-events:none;
-  z-index:0;
-  animation:float 20s ease-in-out infinite;
-}
-#detail-bikefit::after{
-  content:'';
-  position:fixed;
-  bottom:-200px;
-  left:-250px;
-  width:900px;
-  height:900px;
-  opacity:.08;
-  background:radial-gradient(ellipse at center,#FF6B9D 0%,#FFA500 40%,transparent 70%);
-  pointer-events:none;
-  z-index:0;
-  animation:float-reverse 25s ease-in-out infinite;
-}
-@keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(30px)}}
-@keyframes float-reverse{0%,100%{transform:translateY(0px)}50%{transform:translateY(-30px)}}
-#detail-bikefit .topbar{
-  background:rgba(15,20,27,.85);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(0,212,255,.15);
-  position:relative;
-  z-index:10;
-}
-#detail-bikefit .back-btn{
-  background:rgba(26,35,45,.6);
-  border-color:rgba(0,212,255,.3);
-  color:#00D4FF;
-  transition:all .3s cubic-bezier(.4,0,.2,1);
-  font-weight:600;
-}
-#detail-bikefit .back-btn:hover{
-  background:rgba(0,212,255,.15);
-  border-color:#00D4FF;
-  color:#00E8FF;
-  box-shadow:0 0 20px rgba(0,212,255,.2);
-}
-#detail-bikefit .topbar-title{
-  color:#00E8FF;
-  font-weight:800;
-  letter-spacing:.05em;
-}
-.bf-wrap{
-  max-width:1180px;
-  margin:0 auto;
-  padding:1.75rem 2rem 4rem;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  position:relative;
-  z-index:1;
-  background-image:url('bike-ref.webp');
-  background-repeat:no-repeat;
-  background-position:center right;
-  background-size:contain;
-  background-attachment:fixed;
-}
-.bf-grid{
-  display:grid;
-  grid-template-columns:1.05fr .95fr;
-  gap:1.5rem;
-  align-items:start;
-  position:relative;
-  z-index:2;
-}
+#detail-bikefit{background:#0A0E14;color:#EDEFF3;min-height:100vh;}
+#detail-bikefit .topbar{background:#10151E;border-bottom:1px solid rgba(255,255,255,.08);}
+#detail-bikefit .back-btn{background:#1A2230;border-color:rgba(255,255,255,.14);color:#aab4c4;}
+#detail-bikefit .back-btn:hover{background:#242E3F;}
+#detail-bikefit .topbar-title{color:#EDEFF3;}
+.bf-wrap{max-width:1180px;margin:0 auto;padding:1.75rem 2rem 4rem;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+.bf-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:1.5rem;align-items:start;}
 @media(max-width:900px){.bf-grid{grid-template-columns:1fr;}}
-.bf-card{
-  background:rgba(18,24,38,.55);
-  backdrop-filter:blur(8px);
-  border:1px solid rgba(0,212,255,.15);
-  border-radius:20px;
-  padding:1.75rem 1.8rem;
-  margin-bottom:1.25rem;
-  box-shadow:0 8px 32px rgba(0,0,0,.2);
-  transition:all .3s cubic-bezier(.4,0,.2,1);
-  position:relative;
-  overflow:hidden;
-}
-.bf-card::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(90deg,transparent,rgba(0,212,255,.1),transparent);
-  transition:left .5s;
-  z-index:-1;
-}
-.bf-card:hover{
-  background:rgba(18,24,38,.75);
-  border-color:rgba(0,212,255,.35);
-  box-shadow:0 12px 48px rgba(0,212,255,.15);
-  transform:translateY(-4px);
-}
-.bf-card:hover::before{left:100%;}
-.bf-card h3{
-  font-size:1.05rem;
-  font-weight:800;
-  letter-spacing:.02em;
-  margin-bottom:1rem;
-  color:#00E8FF;
-  display:flex;
-  align-items:center;
-  gap:.6rem;
-  text-transform:uppercase;
-  background:linear-gradient(135deg,#00D4FF 0%,#00A8FF 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
+.bf-card{background:#121826;border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.5rem 1.6rem;margin-bottom:1.25rem;}
+.bf-card h3{font-size:.95rem;font-weight:700;letter-spacing:.02em;margin-bottom:1rem;color:#EDEFF3;display:flex;align-items:center;gap:.5rem;}
 .bf-identity{display:grid;grid-template-columns:1.4fr 1fr;gap:.9rem;margin-bottom:1.25rem;}
 .bf-field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.85rem;}
-.bf-field label{
-  font-size:.73rem;
-  color:#00D4FF;
-  font-weight:700;
-  letter-spacing:.03em;
-  text-transform:uppercase;
-}
-.bf-field input,.bf-field select{
-  background:rgba(12,17,25,.6);
-  border:1.5px solid rgba(0,212,255,.2);
-  border-radius:12px;
-  padding:11px 14px;
-  color:#EDEFF3;
-  font-size:.9rem;
-  font-family:inherit;
-  transition:all .25s cubic-bezier(.4,0,.2,1);
-}
-.bf-field input::placeholder{color:rgba(255,255,255,.3);}
-.bf-field input:focus,.bf-field select:focus{
-  outline:none;
-  border-color:#00D4FF;
-  background:rgba(0,212,255,.08);
-  box-shadow:0 0 20px rgba(0,212,255,.15);
-}
+.bf-field label{font-size:.72rem;color:#8A93A6;font-weight:600;letter-spacing:.02em;}
+.bf-field input,.bf-field select{background:#0C1119;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:9px 12px;color:#EDEFF3;font-size:.9rem;font-family:inherit;}
+.bf-field input:focus,.bf-field select:focus{outline:none;border-color:#185FA5;}
 .bf-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
-.bf-section-label{
-  font-size:.68rem;
-  color:#00D4FF;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  font-weight:800;
-  margin:1.2rem 0 .8rem;
-  opacity:.9;
-}
+.bf-section-label{font-size:.68rem;color:#5B6478;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:1rem 0 .6rem;}
 .bf-section-label:first-child{margin-top:0;}
-.bf-results-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:baseline;
-  padding:10px 0;
-  border-bottom:.5px solid rgba(0,212,255,.1);
-  transition:background .2s;
-}
-.bf-results-row:hover{background:rgba(0,212,255,.05);}
+.bf-results-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:.5px solid rgba(255,255,255,.06);}
 .bf-results-row:last-child{border-bottom:none;}
-.bf-results-row .bf-label{font-size:.82rem;color:#00D4FF;font-weight:600;}
-.bf-results-row .bf-value{
-  font-family:'SF Mono',Consolas,monospace;
-  font-size:1rem;
-  font-weight:800;
-  color:#00E8FF;
-}
-.bf-results-row .bf-value.warn{color:#FF6B9D;font-weight:800;}
-.bf-results-row .bf-value.ok{color:#00FF88;font-weight:800;}
+.bf-results-row .bf-label{font-size:.82rem;color:#aab4c4;}
+.bf-results-row .bf-value{font-family:'SF Mono',Consolas,monospace;font-size:.95rem;font-weight:700;color:#EDEFF3;}
+.bf-results-row .bf-value.warn{color:#E24B4A;}
+.bf-results-row .bf-value.ok{color:#1D9E75;}
 .bf-info{position:relative;display:inline-block;margin-left:6px;color:#185FA5;cursor:help;font-size:.85em;line-height:1;outline:none;}
 .bf-info:hover,.bf-info:focus{color:#3E8FE0;}
 .bf-info:hover::after,.bf-info:focus::after{
@@ -1181,40 +1021,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   z-index:60;
   pointer-events:none;
 }
-.bf-generate-btn{
-  width:100%;
-  background:linear-gradient(135deg,#00D4FF 0%,#0099FF 50%,#00A8FF 100%);
-  color:#000;
-  border:none;
-  border-radius:14px;
-  padding:15px;
-  font-size:.98rem;
-  font-weight:800;
-  cursor:pointer;
-  margin-top:.7rem;
-  transition:all .3s cubic-bezier(.4,0,.2,1);
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  box-shadow:0 8px 24px rgba(0,212,255,.25);
-  position:relative;
-  overflow:hidden;
-}
-.bf-generate-btn::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
-  transition:left .5s;
-}
-.bf-generate-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 36px rgba(0,212,255,.4);
-  background:linear-gradient(135deg,#00E8FF 0%,#00BBFF 50%,#00BFFF 100%);
-}
-.bf-generate-btn:hover::before{left:100%;}
+.bf-generate-btn{width:100%;background:#185FA5;color:#fff;border:none;border-radius:12px;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:.5rem;transition:background .15s;}
+.bf-generate-btn:hover{background:#12497F;}
 .bf-guide-toggle{background:none;border:1px solid rgba(255,255,255,.14);color:#aab4c4;border-radius:10px;padding:8px 14px;font-size:.78rem;cursor:pointer;font-family:inherit;}
 .bf-guide-toggle:hover{border-color:#185FA5;color:#EDEFF3;}
 .bf-guide-imgs{display:none;margin-top:1rem;gap:1rem;}
@@ -1382,39 +1190,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="topbar-title">&#128295; Bike Fit Calculator</div>
   </div>
   <div class="bf-wrap">
-    <svg class="bf-bike-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:1400px;height:1000px;opacity:.08;z-index:0;pointer-events:none;">
-      <defs>
-        <linearGradient id="bikegradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#0099FF;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <!-- Frame -->
-      <line x1="300" y1="600" x2="600" y2="300" stroke="url(#bikegradient)" stroke-width="24" stroke-linecap="round"/>
-      <line x1="600" y1="300" x2="900" y2="600" stroke="url(#bikegradient)" stroke-width="24" stroke-linecap="round"/>
-      <line x1="600" y1="300" x2="600" y2="600" stroke="url(#bikegradient)" stroke-width="20" stroke-linecap="round"/>
-      <!-- Seat tube -->
-      <line x1="600" y1="300" x2="550" y2="600" stroke="url(#bikegradient)" stroke-width="18" stroke-linecap="round"/>
-      <!-- Chain stay -->
-      <line x1="550" y1="600" x2="900" y2="600" stroke="url(#bikegradient)" stroke-width="20" stroke-linecap="round"/>
-      <!-- Aero bars -->
-      <path d="M 700 350 Q 750 320 800 330" stroke="url(#bikegradient)" stroke-width="16" fill="none" stroke-linecap="round"/>
-      <!-- Left wheel -->
-      <circle cx="300" cy="600" r="120" fill="none" stroke="url(#bikegradient)" stroke-width="16"/>
-      <circle cx="300" cy="600" r="100" fill="none" stroke="url(#bikegradient)" stroke-width="8" opacity=".6"/>
-      <!-- Right wheel -->
-      <circle cx="900" cy="600" r="120" fill="none" stroke="url(#bikegradient)" stroke-width="16"/>
-      <circle cx="900" cy="600" r="100" fill="none" stroke="url(#bikegradient)" stroke-width="8" opacity=".6"/>
-      <!-- Headtube/Fork -->
-      <line x1="300" y1="600" x2="250" y2="200" stroke="url(#bikegradient)" stroke-width="18" stroke-linecap="round"/>
-      <line x1="250" y1="200" x2="300" y2="100" stroke="url(#bikegradient)" stroke-width="16" stroke-linecap="round"/>
-    </svg>
     <div class="bf-grid">
 
       <!-- LEFT: INPUTS -->
       <div>
         <div class="bf-card">
-          <h3>🚴 Rider &amp; Bike</h3>
+          <h3>&#127942; Rider &amp; Bike</h3>
           <div class="bf-identity">
             <div class="bf-field">
               <label>Cyclist Name</label>
@@ -1784,6 +1565,39 @@ function bfBuildSchematicSVG(theme, bikeType, r){
       + '  <g transform="translate(370, 320) rotate(77)">'
       + '    <rect x="-10" y="-14" width="145" height="24" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
       + '    <text x="-5" y="2" font-size="12" font-weight="bold" fill="#0f172a">SADDLE HT: ' + saddleHeightMM + ' mm</text>'
+      + '  </g>'
+      + '</svg>'
+      + '<div style="margin-top: 20px; font-size: 11px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">AERO COCKPIT TOP VIEW</div>'
+      + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="100%" height="100%" style="background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">'
+      + '  <defs>'
+      + '    <marker id="arrow-top-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '      <path d="M 0 2 L 10 5 L 0 8 z" fill="#10b981"/>'
+      + '    </marker>'
+      + '  </defs>'
+      + '  <circle cx="350" cy="200" r="15" fill="none" stroke="#ef4444" stroke-width="2"/>'
+      + '  <circle cx="350" cy="200" r="4" fill="#ef4444"/>'
+      + '  <line x1="330" y1="200" x2="370" y2="200" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3" />'
+      + '  <line x1="350" y1="180" x2="350" y2="220" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3" />'
+      + '  <line x1="350" y1="100" x2="350" y2="300" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 3" />'
+      + '  <rect x="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2)) + '" y="130" width="' + Math.round(r.recommended.aeroPadCenterWidth.value) + '" height="50" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5" />'
+      + '  <text x="' + (350) + '" y="161" font-size="11" font-weight="bold" fill="#0c4a6e" text-anchor="middle">Aero Pads</text>'
+      + '  <ellipse cx="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 20) + '" cy="270" rx="22" ry="30" fill="none" stroke="#06b6d4" stroke-width="3" />'
+      + '  <ellipse cx="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 20) + '" cy="270" rx="22" ry="30" fill="none" stroke="#06b6d4" stroke-width="3" />'
+      + '  <text x="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 20) + '" y="275" font-size="10" font-weight="bold" fill="#0e7490" text-anchor="middle">L</text>'
+      + '  <text x="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 20) + '" y="275" font-size="10" font-weight="bold" fill="#0e7490" text-anchor="middle">R</text>'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2) - 40) + '" y1="165" x2="' + (350 + Math.round(r.recommended.aeroPadCenterWidth.value / 2) + 40) + '" y2="165" stroke="#10b981" stroke-width="2" marker-start="url(#arrow-top-green)" marker-end="url(#arrow-top-green)" />'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2) - 40) + '" y1="160" x2="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2) - 40) + '" y2="170" stroke="#10b981" stroke-width="2" />'
+      + '  <line x1="' + (350 + Math.round(r.recommended.aeroPadCenterWidth.value / 2) + 40) + '" y1="160" x2="' + (350 + Math.round(r.recommended.aeroPadCenterWidth.value / 2) + 40) + '" y2="170" stroke="#10b981" stroke-width="2" />'
+      + '  <g transform="translate(' + (350) + ', 145)">'
+      + '    <rect x="-65" y="-16" width="130" height="24" rx="4" fill="#dcfce7" stroke="#10b981" stroke-width="1.5"/>'
+      + '    <text x="0" y="3" font-size="12" font-weight="bold" fill="#15803d" text-anchor="middle">W_pad: ' + Math.round(r.recommended.aeroPadCenterWidth.value) + ' mm</text>'
+      + '  </g>'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 85) + '" y1="310" x2="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 85) + '" y2="310" stroke="#10b981" stroke-width="2" marker-start="url(#arrow-top-green)" marker-end="url(#arrow-top-green)" />'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 85) + '" y1="305" x2="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 85) + '" y2="315" stroke="#10b981" stroke-width="2" />'
+      + '  <line x1="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 85) + '" y1="305" x2="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 85) + '" y2="315" stroke="#10b981" stroke-width="2" />'
+      + '  <g transform="translate(' + (350) + ', 340)">'
+      + '    <rect x="-75" y="-16" width="150" height="24" rx="4" fill="#dcfce7" stroke="#10b981" stroke-width="1.5"/>'
+      + '    <text x="0" y="3" font-size="12" font-weight="bold" fill="#15803d" text-anchor="middle">W_grip: ' + Math.round(r.recommended.aeroExtensionGripWidth.value) + ' mm</text>'
       + '  </g>'
       + '</svg>';
   }
