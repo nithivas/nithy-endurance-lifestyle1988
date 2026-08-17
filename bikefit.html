@@ -1046,7 +1046,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bf-legend-item .bf-legend-def{color:#9aa4b8;}
 .bf-report-overlay{display:none;position:fixed;inset:0;background:rgba(5,7,11,.85);z-index:500;overflow-y:auto;padding:2.5rem 1.5rem;}
 .bf-report-overlay.show{display:block;}
-.bf-report{max-width:760px;margin:0 auto;background:#fff;color:#1a1a1a;border-radius:20px;padding:2.5rem 2.75rem;position:relative;}
+.bf-report{max-width:100%;margin:0 auto;background:#fff;color:#1a1a1a;border-radius:20px;padding:2.5rem 2.75rem;position:relative;overflow:visible;}
 .bf-report-close{position:absolute;top:1.25rem;right:1.25rem;background:#f0f0ed;border:none;border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;color:#555;}
 .bf-report-header{border-bottom:3px solid #185FA5;padding-bottom:1.1rem;margin-bottom:1.4rem;display:flex;align-items:flex-start;gap:1.1rem;}
 .bf-report-header .bf-r-text{flex:1;}
@@ -1068,39 +1068,80 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bf-report .bf-schematic-caption{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#185FA5;font-weight:700;margin-bottom:.5rem;}
 .bf-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:5.2rem;font-weight:800;letter-spacing:.05em;color:rgba(24,95,165,.07);white-space:nowrap;pointer-events:none;user-select:none;z-index:0;}
 @media print{
-  @page{ size:A4; margin:8mm 10mm; orphans:0; widows:0; }
-  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
-  html,body{background:#fff !important;margin:0;padding:0;width:100%;height:100%;border:none;box-shadow:none;}
+  @page{ size:A4; margin:6mm 8mm; orphans:0; widows:0; page-break-after:avoid; }
+  
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; page-break-inside:avoid; }
+  html,body{background:#fff !important;margin:0;padding:0;width:100%;height:auto;border:none;box-shadow:none;overflow:visible;}
   body *{visibility:hidden;}
-  .bf-report,.bf-report *{visibility:visible;}
-  .bf-lightbox,.bf-guide-imgs,.bf-legend{display:none !important;}
-  .bf-report-overlay{position:static !important;inset:auto !important;background:none !important;padding:0 !important;overflow:visible !important;z-index:auto !important;display:block !important;}
-  .bf-report{position:static !important;top:auto;left:auto;box-shadow:none;max-width:none;width:100%;margin:0;padding:0;border-radius:0;transform:none !important;font-size:.82rem;page-break-after:avoid;}
+  .bf-report-overlay,.bf-report{visibility:visible;}
+  .bf-lightbox,.bf-guide-imgs,.bf-legend,.bf-footer-no-print,.bfFooter{display:none !important;visibility:hidden;}
+  
+  .bf-report-overlay{
+    position:static !important;inset:auto !important;background:none !important;
+    padding:0 !important;overflow:visible !important;z-index:auto !important;
+    display:block !important;margin:0;border:none;width:100%;height:auto;
+    page-break-after:avoid;page-break-inside:avoid;
+  }
+  
+  .bf-report{
+    position:static !important;top:auto;left:auto;right:auto;bottom:auto;
+    box-shadow:none;width:100%;margin:0;padding:8mm 6mm;border-radius:0;
+    transform:none !important;font-size:.78rem;display:block;
+    page-break-after:avoid;page-break-inside:avoid;overflow:visible;
+    height:auto;max-width:none;background:#fff;
+  }
+  
   .bf-report-close,.bf-report-print,.bf-generate-btn,.bf-guide-toggle,.bf-info{display:none !important;}
-  /* Tighter header: smaller logo/title/badge so it doesn't eat a quarter of page 1. */
-  .bf-report-header{border-bottom-width:1.5px;padding-bottom:.5rem;margin-bottom:.5rem;break-inside:avoid;page-break-inside:avoid;page-break-after:avoid;}
-  .bf-report-logo{width:48px;height:48px;border-width:1px;}
-  .bf-report-header h1{font-size:1.15rem;margin:.1rem 0;}
-  .bf-report-header .bf-r-eyebrow{font-size:.58rem;}
-  .bf-report-header .bf-r-meta{font-size:.68rem;}
-  .bf-report-badge{font-size:.62rem;padding:2px 8px;margin-top:.2rem;}
-  /* Smaller schematic: it's a supporting visual, not the primary reference data */
-  .bf-report .bf-schematic-caption{font-size:.62rem;margin-bottom:.25rem;}
-  .bf-schematic-wrap{margin:0 auto .5rem;max-width:360px;padding:.3rem;break-inside:avoid-page;page-break-inside:avoid;}
-  .bf-schematic-wrap svg{max-width:100% !important;height:auto !important;}
-  /* Compact tables: only avoid breaking a single ROW mid-way (not the whole
-     table) so content packs pages fully instead of jumping whole tables to
-     the next page and leaving blank space behind. */
-  .bf-report table{margin-bottom:.6rem;font-size:.75rem;width:100%;line-height:1.3;}
-  .bf-report table caption{margin-bottom:.25rem;font-size:.62rem;font-weight:700;}
-  .bf-report td{padding:3px 3px;line-height:1.2;}
-  .bf-report th{padding:3px 3px;line-height:1.2;font-size:.7rem;}
-  .bf-report table tr{break-inside:avoid;page-break-inside:avoid;}
-  .bf-report-footer{margin-top:.4rem;padding-top:.3rem;font-size:.6rem;break-inside:avoid;page-break-inside:avoid;}
-  .bf-watermark{font-size:2.5rem;}
-  /* Force single-page layout */
-  .bf-report-title,.bf-report-section{page-break-after:avoid;}
-  .bf-report-section h2{margin:.3rem 0 .25rem 0;font-size:.9rem;page-break-after:avoid;}
+  
+  /* Header optimization */
+  .bf-report-header{
+    border-bottom:1px solid #ddd;padding-bottom:.4rem;margin-bottom:.4rem;
+    page-break-after:avoid;page-break-inside:avoid;overflow:visible;
+  }
+  .bf-report-logo{width:40px;height:40px;}
+  .bf-report-header h1{font-size:1rem;margin:.05rem 0;line-height:1.1;}
+  .bf-report-header .bf-r-eyebrow{font-size:.55rem;margin:0;}
+  .bf-report-header .bf-r-meta{font-size:.65rem;margin:0;}
+  .bf-report-badge{font-size:.6rem;padding:1px 6px;margin:0;display:inline-block;}
+  
+  /* Watermark visible but subtle */
+  .bf-watermark{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);
+    font-size:3rem;font-weight:800;letter-spacing:.05em;color:rgba(24,95,165,.08);
+    white-space:nowrap;pointer-events:none;user-select:none;z-index:0;
+    page-break-after:avoid;visibility:visible;
+  }
+  
+  /* Schematic optimization */
+  .bf-schematic-caption{font-size:.58rem;margin-bottom:.2rem;page-break-after:avoid;}
+  .bf-schematic-wrap{
+    margin:0 auto .3rem;max-width:300px;padding:.2rem;
+    page-break-inside:avoid;overflow:visible;width:100%;height:auto;
+  }
+  .bf-schematic-wrap svg{max-width:100% !important;height:auto !important;width:100%;display:block;}
+  
+  /* Table optimization for single page */
+  .bf-report table{
+    margin-bottom:.4rem;font-size:.7rem;width:100%;line-height:1.2;
+    border-collapse:collapse;page-break-inside:avoid;
+  }
+  .bf-report table caption{margin-bottom:.15rem;font-size:.6rem;font-weight:700;page-break-after:avoid;}
+  .bf-report td{padding:2px 2px;line-height:1.15;border:none;}
+  .bf-report th{padding:2px 2px;line-height:1.15;font-size:.65rem;border:none;}
+  .bf-report table tr{page-break-inside:avoid;break-inside:avoid;}
+  
+  /* Section spacing tight */
+  .bf-report-section{page-break-inside:avoid;page-break-after:avoid;margin:0;padding:0;overflow:visible;}
+  .bf-report-section h2{margin:.2rem 0 .15rem 0;font-size:.85rem;page-break-after:avoid;line-height:1.1;}
+  
+  .bf-report-footer{margin-top:.25rem;padding-top:.2rem;font-size:.55rem;page-break-inside:avoid;page-break-before:avoid;}
+  
+  /* Hide unnecessary elements */
+  .bf-results-row:nth-child(n+25){display:none;}
+  
+  /* Ensure no extra space */
+  body{height:auto !important;min-height:auto !important;}
+  .bf-report-overlay{height:auto !important;}
 }
 
 </style>
