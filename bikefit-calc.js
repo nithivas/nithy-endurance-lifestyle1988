@@ -115,7 +115,58 @@
     };
   }
 
-  var api = { computeBikeFit: computeBikeFit };
+  /**
+   * Formats a single metric object for print/PDF display, converting any
+   * 'cm' value to millimeters (the standard unit for print templates) so
+   * reports never mix cm and mm. Every metric gets a ready-to-print
+   * `formatted` string in addition to the raw (possibly converted) value.
+   */
+  function formatMetricMM(metric) {
+    var value = metric.value;
+    var unit = metric.unit;
+    var formatted;
+    if (unit === 'cm') {
+      value = round1(value * 10);
+      unit = 'mm';
+      formatted = value + ' mm';
+    } else if (unit === 'mm') {
+      formatted = value + ' mm';
+    } else if (unit === 'deg') {
+      formatted = value + '\u00b0';
+    } else if (unit === 'status') {
+      formatted = String(value);
+    } else {
+      formatted = String(value) + (unit ? ' ' + unit : '');
+    }
+    return { label: metric.label, note: metric.note, value: value, unit: unit, formatted: formatted };
+  }
+
+  function formatGroupMM(group) {
+    var out = {};
+    Object.keys(group).forEach(function (key) {
+      out[key] = formatMetricMM(group[key]);
+    });
+    return out;
+  }
+
+  /**
+   * Same shape as computeBikeFit(inputs), but every metric is normalized
+   * to millimeters with a ready-to-print `formatted` string
+   * (e.g. "748 mm"). Use this for PDF/print/report templates to avoid
+   * cm vs mm confusion; use computeBikeFit() for the live on-screen
+   * dashboard where cm values are already correct.
+   */
+  function computeBikeFitFormatted(inputs) {
+    var r = computeBikeFit(inputs);
+    return {
+      core: formatGroupMM(r.core),
+      road: formatGroupMM(r.road),
+      tri: formatGroupMM(r.tri),
+      recommended: formatGroupMM(r.recommended)
+    };
+  }
+
+  var api = { computeBikeFit: computeBikeFit, computeBikeFitFormatted: computeBikeFitFormatted };
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = api;
