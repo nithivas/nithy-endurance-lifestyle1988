@@ -1069,21 +1069,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bf-report .bf-schematic-caption{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#185FA5;font-weight:700;margin-bottom:.5rem;}
 .bf-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:5.2rem;font-weight:800;letter-spacing:.05em;color:rgba(24,95,165,.07);white-space:nowrap;pointer-events:none;user-select:none;z-index:0;}
 @media print{
-  @page{ size:A4; margin:12mm; }
+  @page{ size:A4; margin:10mm; }
   html,body{background:#fff !important;margin:0;padding:0;width:auto;height:auto;}
   body *{visibility:hidden;}
   .bf-report,.bf-report *{visibility:visible;}
   .bf-lightbox,.bf-guide-imgs,.bf-legend{display:none !important;}
   .bf-report-overlay{position:static !important;inset:auto !important;background:none !important;padding:0 !important;overflow:visible !important;z-index:auto !important;display:block !important;}
-  .bf-report{position:static !important;top:auto;left:auto;box-shadow:none;max-width:none;width:100%;margin:0;padding:0;border-radius:0;transform:none !important;}
+  .bf-report{position:static !important;top:auto;left:auto;box-shadow:none;max-width:none;width:100%;margin:0;padding:0;border-radius:0;transform:none !important;font-size:.85rem;}
   .bf-report-close,.bf-report-print,.bf-generate-btn,.bf-guide-toggle,.bf-info{display:none !important;}
-  .bf-report-header{break-inside:avoid;page-break-inside:avoid;page-break-after:avoid;}
-  .bf-report table{break-inside:avoid-page;page-break-inside:avoid;}
-  .bf-report table tr{break-inside:avoid;page-break-inside:avoid;}
-  .bf-schematic-wrap{break-inside:avoid-page;page-break-inside:avoid;max-width:100%;}
+  /* Tighter header: smaller logo/title/badge so it doesn't eat a quarter of page 1. */
+  .bf-report-header{border-bottom-width:2px;padding-bottom:.6rem;margin-bottom:.7rem;break-inside:avoid;page-break-inside:avoid;page-break-after:avoid;}
+  .bf-report-logo{width:52px;height:52px;border-width:1px;}
+  .bf-report-header h1{font-size:1.25rem;margin:.15rem 0;}
+  .bf-report-header .bf-r-eyebrow{font-size:.62rem;}
+  .bf-report-header .bf-r-meta{font-size:.72rem;}
+  .bf-report-badge{font-size:.65rem;padding:3px 10px;margin-top:.25rem;}
+  /* Smaller schematic: it's a supporting visual, not the primary reference data,
+     so it shouldn't dominate page space at the expense of the metric tables. */
+  .bf-report .bf-schematic-caption{font-size:.65rem;margin-bottom:.3rem;}
+  .bf-schematic-wrap{margin:0 auto .7rem;max-width:400px;padding:.4rem;break-inside:avoid-page;page-break-inside:avoid;}
   .bf-schematic-wrap svg{max-width:100% !important;height:auto !important;}
-  .bf-report-footer{break-inside:avoid;page-break-inside:avoid;}
-  .bf-watermark{font-size:3.6rem;}
+  /* Compact tables: only avoid breaking a single ROW mid-way (not the whole
+     table) so content packs pages fully instead of jumping whole tables to
+     the next page and leaving blank space behind. */
+  .bf-report table{margin-bottom:.7rem;font-size:.78rem;}
+  .bf-report table caption{margin-bottom:.3rem;font-size:.65rem;}
+  .bf-report td{padding:4px 4px;}
+  .bf-report table tr{break-inside:avoid;page-break-inside:avoid;}
+  .bf-report-footer{margin-top:.6rem;padding-top:.5rem;font-size:.62rem;break-inside:avoid;page-break-inside:avoid;}
+  .bf-watermark{font-size:3rem;}
 }
 </style>
 </head>
@@ -3583,7 +3597,8 @@ function bfBuildSchematicSVG(theme, bikeType, r){
 function bfReportTable(caption, metrics){
   var rows = metrics.map(function(m){
     var val = (m && typeof m.formatted !== 'undefined') ? m.formatted : bfFmt(m);
-    return '<tr><td>' + m.label + '</td><td>' + val + '</td></tr>';
+    var info = (m && m.note) ? '<span class="bf-info" tabindex="0" data-note="' + m.note.replace(/"/g,'&quot;') + '">&#9432;</span>' : '';
+    return '<tr><td>' + m.label + info + '</td><td>' + val + '</td></tr>';
   }).join('');
   return '<table><caption>' + caption + '</caption>' + rows + '</table>';
 }
@@ -3591,15 +3606,15 @@ function bfReportTable(caption, metrics){
 // Converts a raw cm input into the same {label, value, unit, formatted} shape
 // used by computeBikeFitFormatted(), so every row in the printed report is
 // expressed in millimeters consistently (no cm/mm mixing).
-function bfInputMetricMM(label, valueCm, unit){
+function bfInputMetricMM(label, valueCm, unit, note){
   if (unit === 'cm'){
     var mm = Math.round(Number(valueCm) * 10 * 10) / 10;
-    return { label: label, value: mm, unit: 'mm', formatted: mm + ' mm' };
+    return { label: label, value: mm, unit: 'mm', formatted: mm + ' mm', note: note };
   }
   if (unit === 'mm'){
-    return { label: label, value: valueCm, unit: 'mm', formatted: valueCm + ' mm' };
+    return { label: label, value: valueCm, unit: 'mm', formatted: valueCm + ' mm', note: note };
   }
-  return { label: label, value: valueCm, unit: unit || '', formatted: String(valueCm) };
+  return { label: label, value: valueCm, unit: unit || '', formatted: String(valueCm), note: note };
 }
 
 function generateBikeFitReport(){
@@ -3632,14 +3647,14 @@ function generateBikeFitReport(){
     + '<div class="bf-schematic-caption">Fit Schematic (Side Profile, To Scale)</div>'
     + '<div class="bf-schematic-wrap">' + bfBuildSchematicSVG('light', bikeType, r) + '</div>'
     + bfReportTable('Rider Input Measurements', [
-        bfInputMetricMM('Rider Inseam', inputs.inseam, 'cm'),
-        bfInputMetricMM('Crank Length', inputs.crank, 'mm'),
-        bfInputMetricMM('Torso Length', inputs.torso, 'cm'),
-        bfInputMetricMM('Arm Length', inputs.armLength, 'cm'),
-        bfInputMetricMM('Forearm Length', inputs.forearm, 'cm'),
-        bfInputMetricMM('Static Acromion Width', inputs.staticAcromion, 'cm'),
-        bfInputMetricMM('Elbow Flare Width', inputs.elbowFlare, 'cm'),
-        bfInputMetricMM('Aero Aggressiveness', inputs.aeroAggressiveness, '')
+        bfInputMetricMM('Rider Inseam', inputs.inseam, 'cm', 'Standover height, floor to crotch, measured barefoot'),
+        bfInputMetricMM('Crank Length', inputs.crank, 'mm', 'Center of bottom bracket to center of pedal axle'),
+        bfInputMetricMM('Torso Length', inputs.torso, 'cm', 'Hip joint to shoulder joint, seated posture'),
+        bfInputMetricMM('Arm Length', inputs.armLength, 'cm', 'Shoulder joint to wrist, arm extended'),
+        bfInputMetricMM('Forearm Length', inputs.forearm, 'cm', 'Elbow joint to wrist joint'),
+        bfInputMetricMM('Static Acromion Width', inputs.staticAcromion, 'cm', 'Shoulder-to-shoulder width, standing relaxed'),
+        bfInputMetricMM('Elbow Flare Width', inputs.elbowFlare, 'cm', 'Outer elbow-to-elbow width in aero tuck position'),
+        bfInputMetricMM('Aero Aggressiveness', inputs.aeroAggressiveness, '', 'Rider-selected preference, 1 (upright) to 5 (max aero)')
       ])
     + bfReportTable('Core Fit Metrics', [rMM.core.saddleHeight, rMM.core.jointWidth, rMM.core.scapularDelta, rMM.core.elbowShearWarning])
     + bfReportTable(discCaption, discMetrics)
@@ -3669,17 +3684,34 @@ function printBikeFitReport(){
     report.style.transform = '';
     report.style.width = '';
   }
+  var name = (document.getElementById('bfName') || {}).value || 'Rider';
+  var reportTitle = 'Endurance Squad Bike Fit Report - ' + name;
+
   if (navigator.share && window.matchMedia('(max-width:900px)').matches){
     // On mobile, offer a native share sheet (lets the user "Save to Files"
     // as well as print) in addition to the browser's print dialog.
-    var name = (document.getElementById('bfName') || {}).value || 'Rider';
     try {
-      navigator.share({ title: 'Endurance Squad Bike Fit Report - ' + name })
-        .catch(function(){ window.print(); });
+      navigator.share({ title: reportTitle })
+        .catch(function(){ bfPrintWithTitle(reportTitle); });
       return;
     } catch (e) { /* fall through to print */ }
   }
+  bfPrintWithTitle(reportTitle);
+}
+
+// Browsers print document.title into their own header/footer (independent of
+// our page content), so without this the printed page shows this SPA's title
+// ("Multi-Sport Performance Dashboard") instead of the report itself. We swap
+// it just for the print call and restore it immediately after, so nothing
+// else on the page (tab title, bookmarks, etc.) is affected.
+function bfPrintWithTitle(tempTitle){
+  var originalTitle = document.title;
+  document.title = tempTitle;
+  var restore = function(){ document.title = originalTitle; window.removeEventListener('afterprint', restore); };
+  window.addEventListener('afterprint', restore);
   window.print();
+  // Fallback in case afterprint doesn't fire (some mobile browsers).
+  setTimeout(restore, 2000);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
