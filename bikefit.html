@@ -1126,7 +1126,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     margin:0 auto 3pt !important;max-width:280px !important;padding:0 !important;
     page-break-inside:avoid !important;width:100% !important;height:auto !important;
   }
-  .bf-schematic-wrap svg{display:block !important;visibility:visible !important;width:100% !important;height:auto !important;max-width:280px !important;}
+  .bf-schematic-wrap svg{
+    display:block !important;
+    visibility:visible !important;
+    width:100% !important;
+    height:auto !important;
+    max-width:280px !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+    color-adjust:exact !important;
+  }
+  .bf-schematic-wrap svg *{
+    visibility:visible !important;
+    display:inherit !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
   
   /* Tables */
   .bf-report table{
@@ -1550,6 +1565,39 @@ function bfBuildSchematicSVG(theme, bikeType, r){
       + '  <g transform="translate(370, 320) rotate(77)">'
       + '    <rect x="-10" y="-14" width="145" height="24" rx="4" fill="#f1f5f9" stroke="#475569" stroke-width="1"/>'
       + '    <text x="-5" y="2" font-size="12" font-weight="bold" fill="#0f172a">SADDLE HT: ' + saddleHeightMM + ' mm</text>'
+      + '  </g>'
+      + '</svg>'
+      + '<div style="margin-top: 20px; font-size: 11px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">AERO COCKPIT TOP VIEW</div>'
+      + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="100%" height="100%" style="background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">'
+      + '  <defs>'
+      + '    <marker id="arrow-top-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '      <path d="M 0 2 L 10 5 L 0 8 z" fill="#10b981"/>'
+      + '    </marker>'
+      + '  </defs>'
+      + '  <circle cx="350" cy="200" r="15" fill="none" stroke="#ef4444" stroke-width="2"/>'
+      + '  <circle cx="350" cy="200" r="4" fill="#ef4444"/>'
+      + '  <line x1="330" y1="200" x2="370" y2="200" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3" />'
+      + '  <line x1="350" y1="180" x2="350" y2="220" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3" />'
+      + '  <line x1="350" y1="100" x2="350" y2="300" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 3" />'
+      + '  <rect x="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2)) + '" y="130" width="' + Math.round(r.recommended.aeroPadCenterWidth.value) + '" height="50" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5" />'
+      + '  <text x="' + (350) + '" y="161" font-size="11" font-weight="bold" fill="#0c4a6e" text-anchor="middle">Aero Pads</text>'
+      + '  <ellipse cx="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 20) + '" cy="270" rx="22" ry="30" fill="none" stroke="#06b6d4" stroke-width="3" />'
+      + '  <ellipse cx="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 20) + '" cy="270" rx="22" ry="30" fill="none" stroke="#06b6d4" stroke-width="3" />'
+      + '  <text x="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 20) + '" y="275" font-size="10" font-weight="bold" fill="#0e7490" text-anchor="middle">L</text>'
+      + '  <text x="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 20) + '" y="275" font-size="10" font-weight="bold" fill="#0e7490" text-anchor="middle">R</text>'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2) - 40) + '" y1="165" x2="' + (350 + Math.round(r.recommended.aeroPadCenterWidth.value / 2) + 40) + '" y2="165" stroke="#10b981" stroke-width="2" marker-start="url(#arrow-top-green)" marker-end="url(#arrow-top-green)" />'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2) - 40) + '" y1="160" x2="' + (350 - Math.round(r.recommended.aeroPadCenterWidth.value / 2) - 40) + '" y2="170" stroke="#10b981" stroke-width="2" />'
+      + '  <line x1="' + (350 + Math.round(r.recommended.aeroPadCenterWidth.value / 2) + 40) + '" y1="160" x2="' + (350 + Math.round(r.recommended.aeroPadCenterWidth.value / 2) + 40) + '" y2="170" stroke="#10b981" stroke-width="2" />'
+      + '  <g transform="translate(' + (350) + ', 145)">'
+      + '    <rect x="-65" y="-16" width="130" height="24" rx="4" fill="#dcfce7" stroke="#10b981" stroke-width="1.5"/>'
+      + '    <text x="0" y="3" font-size="12" font-weight="bold" fill="#15803d" text-anchor="middle">W_pad: ' + Math.round(r.recommended.aeroPadCenterWidth.value) + ' mm</text>'
+      + '  </g>'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 85) + '" y1="310" x2="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 85) + '" y2="310" stroke="#10b981" stroke-width="2" marker-start="url(#arrow-top-green)" marker-end="url(#arrow-top-green)" />'
+      + '  <line x1="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 85) + '" y1="305" x2="' + (350 - Math.round(r.recommended.aeroExtensionGripWidth.value / 2) - 85) + '" y2="315" stroke="#10b981" stroke-width="2" />'
+      + '  <line x1="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 85) + '" y1="305" x2="' + (350 + Math.round(r.recommended.aeroExtensionGripWidth.value / 2) + 85) + '" y2="315" stroke="#10b981" stroke-width="2" />'
+      + '  <g transform="translate(' + (350) + ', 340)">'
+      + '    <rect x="-75" y="-16" width="150" height="24" rx="4" fill="#dcfce7" stroke="#10b981" stroke-width="1.5"/>'
+      + '    <text x="0" y="3" font-size="12" font-weight="bold" fill="#15803d" text-anchor="middle">W_grip: ' + Math.round(r.recommended.aeroExtensionGripWidth.value) + ' mm</text>'
       + '  </g>'
       + '</svg>';
   }
