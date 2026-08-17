@@ -1068,80 +1068,102 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bf-report .bf-schematic-caption{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#185FA5;font-weight:700;margin-bottom:.5rem;}
 .bf-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:5.2rem;font-weight:800;letter-spacing:.05em;color:rgba(24,95,165,.07);white-space:nowrap;pointer-events:none;user-select:none;z-index:0;}
 @media print{
-  @page{ size:A4; margin:6mm 8mm; orphans:0; widows:0; page-break-after:avoid; }
+  @page{ size:A4; margin:5mm 6mm; orphans:0; widows:0; page-break-after:avoid; }
   
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; page-break-inside:avoid; }
-  html,body{background:#fff !important;margin:0;padding:0;width:100%;height:auto;border:none;box-shadow:none;overflow:visible;}
-  body *{visibility:hidden;}
-  .bf-report-overlay,.bf-report,.bf-report *{visibility:visible !important;}
-  .bf-lightbox,.bf-guide-imgs,.bf-legend,.bf-footer-no-print,.bfFooter{display:none !important;visibility:hidden !important;}
   
+  html,body{
+    background:#fff !important;margin:0;padding:0;width:100%;height:auto;
+    border:none;box-shadow:none;overflow:visible;font-size:10pt;
+  }
+  
+  /* Hide everything first */
+  body *{visibility:hidden;display:none;}
+  
+  /* Show ONLY report and ALL its contents */
   .bf-report-overlay{
+    display:block !important;visibility:visible !important;
     position:static !important;inset:auto !important;background:none !important;
-    padding:0 !important;overflow:visible !important;z-index:auto !important;
-    display:block !important;margin:0;border:none;width:100%;height:auto;
-    page-break-after:avoid;page-break-inside:avoid;visibility:visible !important;
+    padding:0 !important;margin:0 !important;border:none !important;
+    width:100% !important;height:auto !important;overflow:visible !important;
+    z-index:auto !important;page-break-after:avoid !important;page-break-inside:avoid !important;
   }
   
   .bf-report{
+    display:block !important;visibility:visible !important;
     position:static !important;top:auto;left:auto;right:auto;bottom:auto;
-    box-shadow:none;width:100%;margin:0;padding:8mm 6mm;border-radius:0;
-    transform:none !important;font-size:.78rem;display:block !important;
-    page-break-after:avoid;page-break-inside:avoid;overflow:visible;
-    height:auto;max-width:none;background:#fff;visibility:visible !important;
+    margin:0 !important;padding:4mm 5mm !important;border:none !important;
+    width:100% !important;height:auto !important;background:#fff !important;
+    box-shadow:none !important;border-radius:0 !important;transform:none !important;
+    font-size:9pt !important;page-break-after:avoid !important;page-break-inside:avoid !important;
+    overflow:visible !important;max-width:none !important;
   }
   
+  /* Watermark - visible and on top */
+  .bf-watermark{
+    display:block !important;visibility:visible !important;
+    position:fixed !important;top:50%;left:50%;
+    transform:translate(-50%,-50%) rotate(-32deg) !important;
+    font-size:4rem !important;font-weight:800 !important;letter-spacing:.05em !important;
+    color:rgba(24,95,165,.12) !important;white-space:nowrap !important;
+    pointer-events:none !important;user-select:none !important;z-index:100 !important;
+    page-break-inside:avoid !important;
+  }
+  
+  /* Show ALL report children */
+  .bf-report-header{display:block !important;visibility:visible !important;page-break-inside:avoid;}
+  .bf-report-logo{display:inline-block !important;visibility:visible !important;width:35px !important;height:35px !important;}
+  .bf-r-text{display:block !important;visibility:visible !important;}
+  .bf-r-eyebrow{display:block !important;visibility:visible !important;font-size:7pt !important;margin:0 !important;}
+  .bf-report-header h1{display:block !important;visibility:visible !important;font-size:14pt !important;margin:2pt 0 !important;font-weight:bold !important;}
+  .bf-r-meta{display:block !important;visibility:visible !important;font-size:8pt !important;margin:0 !important;}
+  .bf-report-badge{display:inline-block !important;visibility:visible !important;font-size:7pt !important;padding:1px 4px !important;margin:2pt 0 0 0 !important;}
+  
+  /* Schematic */
+  .bf-schematic-caption{display:block !important;visibility:visible !important;font-size:8pt !important;margin:3pt 0 2pt 0 !important;page-break-after:avoid;}
+  .bf-schematic-wrap{
+    display:block !important;visibility:visible !important;
+    margin:0 auto 3pt !important;max-width:280px !important;padding:0 !important;
+    page-break-inside:avoid !important;width:100% !important;height:auto !important;
+  }
+  .bf-schematic-wrap svg{display:block !important;visibility:visible !important;width:100% !important;height:auto !important;max-width:280px !important;}
+  
+  /* Tables */
+  .bf-report table{
+    display:table !important;visibility:visible !important;width:100% !important;
+    margin:2pt 0 !important;font-size:8pt !important;line-height:1.1 !important;
+    border-collapse:collapse !important;page-break-inside:avoid !important;
+  }
+  .bf-report table caption{
+    display:table-caption !important;visibility:visible !important;
+    font-size:7pt !important;font-weight:bold !important;color:#185FA5 !important;
+    text-align:left !important;margin-bottom:2pt !important;page-break-after:avoid !important;
+  }
+  .bf-report thead{display:table-header-group !important;visibility:visible !important;}
+  .bf-report tbody{display:table-row-group !important;visibility:visible !important;}
+  .bf-report tr{display:table-row !important;visibility:visible !important;page-break-inside:avoid;}
+  .bf-report th{
+    display:table-cell !important;visibility:visible !important;
+    padding:2pt 3pt !important;font-size:7pt !important;font-weight:bold !important;
+    border-bottom:1px solid #ddd !important;text-align:left !important;
+  }
+  .bf-report td{
+    display:table-cell !important;visibility:visible !important;
+    padding:1pt 3pt !important;font-size:8pt !important;border-bottom:0.5px solid #eee !important;
+  }
+  
+  /* Sections */
+  .bf-report-section{display:block !important;visibility:visible !important;margin:0 !important;padding:0 !important;page-break-inside:avoid;}
+  .bf-report-section h2{display:block !important;visibility:visible !important;font-size:9pt !important;font-weight:bold !important;margin:3pt 0 2pt 0 !important;page-break-after:avoid;}
+  
+  /* Footer */
+  .bf-report-footer{display:block !important;visibility:visible !important;font-size:6pt !important;margin-top:2pt !important;padding-top:2pt !important;page-break-inside:avoid;}
+  
+  /* Hide print buttons and UI */
   .bf-report-close,.bf-report-print,.bf-generate-btn,.bf-guide-toggle,.bf-info{display:none !important;}
   
-  /* Header optimization */
-  .bf-report-header{
-    border-bottom:1px solid #ddd;padding-bottom:.4rem;margin-bottom:.4rem;
-    page-break-after:avoid;page-break-inside:avoid;overflow:visible;visibility:visible !important;
-  }
-  .bf-report-logo{width:40px;height:40px;visibility:visible !important;}
-  .bf-report-header h1{font-size:1rem;margin:.05rem 0;line-height:1.1;visibility:visible !important;}
-  .bf-report-header .bf-r-eyebrow{font-size:.55rem;margin:0;visibility:visible !important;}
-  .bf-report-header .bf-r-meta{font-size:.65rem;margin:0;visibility:visible !important;}
-  .bf-report-badge{font-size:.6rem;padding:1px 6px;margin:0;display:inline-block !important;visibility:visible !important;}
-  
-  /* Watermark visible but subtle */
-  .bf-watermark{
-    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);
-    font-size:3rem;font-weight:800;letter-spacing:.05em;color:rgba(24,95,165,.08);
-    white-space:nowrap;pointer-events:none;user-select:none;z-index:0;
-    page-break-after:avoid;visibility:visible !important;display:block !important;
-  }
-  
-  /* Schematic optimization */
-  .bf-schematic-caption{font-size:.58rem;margin-bottom:.2rem;page-break-after:avoid;visibility:visible !important;}
-  .bf-schematic-wrap{
-    margin:0 auto .3rem;max-width:300px;padding:.2rem;
-    page-break-inside:avoid;overflow:visible;width:100%;height:auto;visibility:visible !important;
-  }
-  .bf-schematic-wrap svg{max-width:100% !important;height:auto !important;width:100%;display:block !important;visibility:visible !important;}
-  
-  /* Table optimization for single page */
-  .bf-report table{
-    margin-bottom:.4rem;font-size:.7rem;width:100%;line-height:1.2;
-    border-collapse:collapse;page-break-inside:avoid;visibility:visible !important;display:table !important;
-  }
-  .bf-report table caption{margin-bottom:.15rem;font-size:.6rem;font-weight:700;page-break-after:avoid;visibility:visible !important;}
-  .bf-report td{padding:2px 2px;line-height:1.15;border:none;visibility:visible !important;}
-  .bf-report th{padding:2px 2px;line-height:1.15;font-size:.65rem;border:none;visibility:visible !important;}
-  .bf-report table tr{page-break-inside:avoid;break-inside:avoid;visibility:visible !important;display:table-row !important;}
-  
-  /* Section spacing tight */
-  .bf-report-section{page-break-inside:avoid;page-break-after:avoid;margin:0;padding:0;overflow:visible;visibility:visible !important;}
-  .bf-report-section h2{margin:.2rem 0 .15rem 0;font-size:.85rem;page-break-after:avoid;line-height:1.1;visibility:visible !important;}
-  
-  .bf-report-footer{margin-top:.25rem;padding-top:.2rem;font-size:.55rem;page-break-inside:avoid;page-break-before:avoid;visibility:visible !important;}
-  
-  /* Hide unnecessary elements */
-  .bf-results-row:nth-child(n+25){display:none !important;}
-  
-  /* Ensure no extra space */
-  body{height:auto !important;min-height:auto !important;}
-  .bf-report-overlay{height:auto !important;}
+  /* Remove extra spacing */
+  body{height:auto !important;min-height:auto !important;padding:0 !important;margin:0 !important;}
 }
 
 </style>
