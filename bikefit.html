@@ -1496,6 +1496,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="bf-field"><label>Stem Length</label><input type="number" step="0.1" id="bfStemLength" value="10" oninput="renderBikeFit()"></div>
             <div class="bf-field"><label>Handlebar Bar Reach</label><input type="number" step="0.1" id="bfBarReach" value="7.5" oninput="renderBikeFit()"></div>
           </div>
+          <!-- ========================================== -->
+          <!-- INSERT HERE: After "Handlebar Bar Reach"   -->
+          <!-- ========================================== -->
+          
+          <!-- Arm Pad Stack (BB to Pad Top) -->
+          <div class="form-group">
+            <label for="padStackBB">Arm Pad Stack (BB to Pad Top) (cm)</label>
+            <input type="number" id="padStackBB" name="padStackBB" step="0.1" min="0" class="form-control" placeholder="Optional (e.g. 62.5)">
+            <small class="form-text text-muted">Vertical distance from BB centre to top surface of pad.</small>
+          </div>
+          
+          <!-- Arm Pad Reach (BB to Pad Centre) -->
+          <div class="form-group">
+            <label for="padReachBB">Arm Pad Reach (BB to Pad Centre) (cm)</label>
+            <input type="number" id="padReachBB" name="padReachBB" step="0.1" min="0" class="form-control" placeholder="Optional (e.g. 48.0)">
+            <small class="form-text text-muted">Horizontal distance from BB centre to pad centre.</small>
+          </div>
+          
+          <!-- ========================================== -->
+          <!-- BEFORE: "Aero Preference" / Aggressiveness -->
+          <!-- ========================================== -->
 
           <div class="bf-section-label">Aero Preference</div>
           <div class="bf-field">
