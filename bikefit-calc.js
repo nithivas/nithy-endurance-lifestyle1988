@@ -12,11 +12,15 @@
   function round1(n) {
     return Math.round(n * 10) / 10;
   }
-
+  function numberOrNull(value) {
+    if (value === undefined || value === null || value === '') return null;
+    var n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
   function toRadians(deg) {
     return (deg * Math.PI) / 180;
   }
-
+  
   /**
    * @param {Object} inputs
    * @param {number} inputs.inseam            Rider Inseam (cm)
@@ -32,6 +36,8 @@
    * @param {number} inputs.frameReach        Frame Reach, BB to headtube top (cm)
    * @param {number} inputs.stemLength        Stem Length (cm)
    * @param {number} inputs.barReach          Handlebar Bar Reach (cm)
+   * @param {number} [inputs.padStackBB]  Measured BB to pad top (cm)
+   * @param {number} [inputs.padReachBB]  Measured BB to pad centre (cm)
    * @returns {Object} core, road, tri, recommended metric groups
    */
   function computeBikeFit(inputs) {
@@ -53,7 +59,7 @@
     var jointWidth = round1(staticAcromion * 0.905);
     var scapularDelta = round1(staticAcromion - jointWidth);
     var elbowShearDelta = elbowFlare - jointWidth;
-    var elbowShearWarning = elbowShearDelta > 3 ? 'HIGH TORQUE \u2013 Narrow Cockpit' : 'OPTIMAL';
+    var elbowShearWarning = elbowShearDelta > 3 ? 'REVIEW COCKPIT WIDTH' : 'NO WIDTH FLAG';
 
     // ---- ROAD ----
     var roadHBReach = round1(torso * 0.45 + armLength * 0.35);
@@ -65,8 +71,8 @@
     // ---- TRI / TT ----
     var aeroPadReach = round1(forearm * 1.33);
     var aeroPadDrop = -8.1; // fixed reference value in source sheet
-    var armPadStackBB = round1(saddleHeight + 14.5);
-    var armPadReachBB = round1(frameReach + stemLength - 6.7);
+    var armPadStackBB = numberOrNull(inputs.padStackBB);
+    var armPadReachBB = numberOrNull(inputs.padReachBB);
     var armPadToGripReach = round1(forearm - 1.0);
     var triTTGripReach = round1(aeroPadReach + armPadToGripReach);
     var extensionGripAngle = 15; // fixed reference value in source sheet
