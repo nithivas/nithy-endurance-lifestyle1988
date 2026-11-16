@@ -127,25 +127,31 @@
    * reports never mix cm and mm. Every metric gets a ready-to-print
    * `formatted` string in addition to the raw (possibly converted) value.
    */
-  function formatMetricMM(metric) {
-    var value = metric.value;
-    var unit = metric.unit;
-    var formatted;
-    if (unit === 'cm') {
-      value = round1(value * 10);
-      unit = 'mm';
-      formatted = value + ' mm';
-    } else if (unit === 'mm') {
-      formatted = value + ' mm';
-    } else if (unit === 'deg') {
-      formatted = value + '\u00b0';
-    } else if (unit === 'status') {
-      formatted = String(value);
-    } else {
-      formatted = String(value) + (unit ? ' ' + unit : '');
-    }
-    return { label: metric.label, note: metric.note, value: value, unit: unit, formatted: formatted };
+function formatMetricMM(metric) {
+  var value = metric.value;
+  var unit = metric.unit;
+  var formatted;
+
+  // Safely handle null/undefined to prevent converting missing values to 0
+  if (value === null || value === undefined) {
+    return { label: metric.label, note: metric.note, value: null, unit: unit, formatted: 'N/A' };
   }
+
+  if (unit === 'cm') {
+    value = round1(value * 10);
+    unit = 'mm';
+    formatted = value + ' mm';
+  } else if (unit === 'mm') {
+    formatted = value + ' mm';
+  } else if (unit === 'deg') {
+    formatted = value + '\u00b0';
+  } else if (unit === 'status') {
+    formatted = String(value);
+  } else {
+    formatted = String(value) + (unit ? ' ' + unit : '');
+  }
+  return { label: metric.label, note: metric.note, value: value, unit: unit, formatted: formatted };
+}
 
   function formatGroupMM(group) {
     var out = {};
@@ -180,3 +186,36 @@
     global.BikeFitCalc = api;
   }
 })(typeof window !== 'undefined' ? window : this);
+
+
+/**
+ * Formats a single metric object for print/PDF display, converting any
+ * 'cm' value to millimeters (the standard unit for print templates) so
+ * reports never mix cm and mm. Every metric gets a ready-to-print
+ * `formatted` string in addition to the raw (possibly converted) value.
+ */
+function formatMetricMM(metric) {
+  var value = metric.value;
+  var unit = metric.unit;
+  var formatted;
+
+  // Safely handle null/undefined to prevent converting missing values to 0
+  if (value === null || value === undefined) {
+    return { label: metric.label, note: metric.note, value: null, unit: unit, formatted: 'N/A' };
+  }
+
+  if (unit === 'cm') {
+    value = round1(value * 10);
+    unit = 'mm';
+    formatted = value + ' mm';
+  } else if (unit === 'mm') {
+    formatted = value + ' mm';
+  } else if (unit === 'deg') {
+    formatted = value + '\u00b0';
+  } else if (unit === 'status') {
+    formatted = String(value);
+  } else {
+    formatted = String(value) + (unit ? ' ' + unit : '');
+  }
+  return { label: metric.label, note: metric.note, value: value, unit: unit, formatted: formatted };
+}
